@@ -1,14 +1,17 @@
 import React from "react"
 import { css } from "@emotion/core"
 
+const mainWidth = 664
+
 export default () => (
   <main
-    css={css`
-      height: 100%;
-      padding: 64px 32px;
-      box-sizing: border-box;
-      overflow: scroll;
-    `}
+    css={{
+      padding: "64px 32px",
+      boxSizing: "border-box",
+      overflow: "scroll",
+      flexGrow: 1,
+      maxWidth: mainWidth,
+    }}
   >
     <div>
       <h1>Lorem ipsum</h1>
