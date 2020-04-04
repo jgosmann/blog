@@ -1,5 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
+import { graphql, useStaticQuery } from "gatsby"
 
 import FlexList from "./flexList"
 import PostItem from "./postItem.js"
@@ -19,130 +20,146 @@ const infoLinkCss = {
   },
 }
 
+const postsQuery = graphql`
+  query {
+    allMarkdownRemark(sort: { fields: frontmatter___date, order: DESC }) {
+      nodes {
+        timeToRead
+        parent {
+          ... on File {
+            name
+          }
+        }
+        frontmatter {
+          title
+          date(formatString: "MMMM D, Y")
+        }
+      }
+    }
+  }
+`
+
 const Navigation = ({
   isActive,
   top,
   staticDisplayWidth,
   sideBySideDisplayWidth,
-}) => (
-  <nav
-    css={{
-      position: "fixed",
-      background: "#fff",
-      top: top,
-      left: 0,
-      width: "100%",
-      overflow: "scroll",
-      display: "flex",
-      height: isActive ? `calc(100vh - ${top}px)` : 0,
-      overflow: "scroll",
-      alignItems: "flex-start",
-      flexGrow: 0,
-      flexWrap: "wrap",
-      justifyContent: "center",
-      transition: "height 250ms ease-out",
-      a: {
-        textDecoration: "none",
-        color: "#000",
-      },
-      [`@media (min-width: ${staticDisplayWidth}px)`]: {
-        position: "static",
-        height: "100vh",
-        width: "auto",
-        flexGrow: 1,
-        transition: "none",
+}) => {
+  const data = useStaticQuery(postsQuery)
+  return (
+    <nav
+      css={{
+        position: "fixed",
+        background: "#fff",
+        top: top,
+        left: 0,
+        width: "100%",
         overflow: "scroll",
-        maxWidth: infoPaneWidth + postsPaneMaxWidth,
-      },
-      [`@media (min-width: ${sideBySideDisplayWidth}px)`]: {
-        flexWrap: "nowrap",
-      },
-    }}
-  >
-    <div
-      css={{
-        padding: "32px 32px 0",
-        boxSizing: "border-box",
-        maxWidth: infoPaneWidth,
-        textAlign: "center",
-      }}
-    >
-      <img
-        alt="me"
-        src={me}
-        width="200"
-        height="200"
-        css={{ margin: "0 auto", userSelect: "none" }}
-      />
-      <p css={{ margin: "32px 0", fontStyle: "italic" }}>
-        This page mostly serves as an archive of some of my older blog posts by
-        me. I am rarely adding new posts these days.
-      </p>
-      <FlexList
-        css={{
-          justifyContent: "space-evenly",
-        }}
-      >
-        <li>
-          <a css={infoLinkCss} href="">
-            About me
-          </a>
-        </li>
-        <li>
-          <a css={infoLinkCss} href="">
-            Privacy policy
-          </a>
-        </li>
-        <li>
-          <a css={infoLinkCss} href="">
-            Legal notice
-          </a>
-        </li>
-      </FlexList>
-    </div>
-
-    <div
-      css={{
-        flexGrow: 1,
-        padding: 32,
-        boxSizing: "border-box",
-        [`@media (min-width: ${sideBySideDisplayWidth}px)`]: {
-          minWidth: postsPaneSoftMinWidth,
+        display: "flex",
+        height: isActive ? `calc(100vh - ${top}px)` : 0,
+        overflow: "scroll",
+        alignItems: "flex-start",
+        flexGrow: 0,
+        flexWrap: "wrap",
+        justifyContent: "center",
+        transition: "height 250ms ease-out",
+        a: {
+          textDecoration: "none",
+          color: "#000",
+        },
+        [`@media (min-width: ${staticDisplayWidth}px)`]: {
+          position: "static",
           height: "100vh",
+          width: "auto",
+          flexGrow: 1,
+          transition: "none",
           overflow: "scroll",
+          maxWidth: infoPaneWidth + postsPaneMaxWidth,
+        },
+        [`@media (min-width: ${sideBySideDisplayWidth}px)`]: {
+          flexWrap: "nowrap",
         },
       }}
     >
-      <FlexList
-        isOrdered={true}
+      <div
         css={{
-          flexDirection: "column",
+          padding: "32px 32px 0",
+          boxSizing: "border-box",
+          maxWidth: infoPaneWidth,
+          textAlign: "center",
         }}
       >
-        <li
+        <img
+          alt="me"
+          src={me}
+          width="200"
+          height="200"
+          css={{ margin: "0 auto", userSelect: "none" }}
+        />
+        <p css={{ margin: "32px 0", fontStyle: "italic" }}>
+          This page mostly serves as an archive of some of my older blog posts
+          by me. I am rarely adding new posts these days.
+        </p>
+        <FlexList
           css={{
-            margin: "16px 0",
-            "&:nth-child(1)": {
-              marginTop: "0px",
-            },
+            justifyContent: "space-evenly",
           }}
         >
-          <PostItem />
-        </li>
-        <li
+          <li>
+            <a css={infoLinkCss} href="">
+              About me
+            </a>
+          </li>
+          <li>
+            <a css={infoLinkCss} href="">
+              Privacy policy
+            </a>
+          </li>
+          <li>
+            <a css={infoLinkCss} href="">
+              Legal notice
+            </a>
+          </li>
+        </FlexList>
+      </div>
+
+      <div
+        css={{
+          flexGrow: 1,
+          padding: 32,
+          boxSizing: "border-box",
+          [`@media (min-width: ${sideBySideDisplayWidth}px)`]: {
+            minWidth: postsPaneSoftMinWidth,
+            height: "100vh",
+            overflow: "scroll",
+          },
+        }}
+      >
+        <FlexList
+          isOrdered={true}
           css={{
-            margin: "16px 0",
-            "&:nth-child(1)": {
-              marginTop: "0px",
-            },
+            flexDirection: "column",
           }}
         >
-          <PostItem />
-        </li>
-      </FlexList>
-    </div>
-  </nav>
-)
+          {data.allMarkdownRemark.nodes.map((post, i) => (
+            <li
+              key={i}
+              css={{
+                margin: i > 0 ? "16px 0" : 0,
+              }}
+            >
+              <PostItem
+                href={"posts/" + post.parent.name}
+                {...post}
+                {...post.frontmatter}
+              />
+            </li>
+          ))}
+        </FlexList>
+      </div>
+    </nav>
+  )
+}
 
 Navigation.propTypes = {
   isActive: PropTypes.bool,

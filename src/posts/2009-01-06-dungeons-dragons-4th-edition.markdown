@@ -1,0 +1,106 @@
+---
+layout: post
+status: publish
+published: true
+title: Dungeons & Dragons 4th edition
+author: blubb
+author_login: admin
+author_email: jan@hyper-world.de
+author_url: http://www.hyper-world.de
+excerpt: "<p>Well, I played 4e quite a lot by now. Most time as Dungeon Master, but
+  also some sessions as PC.</p>\r\n\r\n<p>In my opinion the 4th edition is great (not
+  perfect, but an improvement compared to 3.5). I think, there are several people
+  who dislike the 4th edition. Probably the best would be to try the 4e yourself.
+  Everyone has different demands concerning roleplaying games: Some like more the
+  roleplaying parts, others like more the kick-in-the-door style of gaming and want
+  to slay hords of monsters.</p>\r\n\r\n<p>Nevertheless, in this post I want to try
+  to state why I like the 4th edition.</p>\r\n"
+wordpress_id: 306
+wordpress_url: http://www.hyper-world.de/en/?p=306
+date: '2009-01-06 23:02:06 -0500'
+date_gmt: '2009-01-06 22:02:06 -0500'
+tags:
+- Dungeons
+- Dragons
+- edition
+- DnD
+- 4e
+- 4th
+- power
+- combat
+- monster
+- character
+- Dungeon Master
+comments:
+- id: 3538
+  author: Yeah
+  author_email: dspektorov@yahoo.com
+  author_url: ''
+  date: '2009-05-26 23:14:06 -0400'
+  date_gmt: '2009-05-26 21:14:06 -0400'
+  content: Tottaly second your apinion. Adventurers vault was great
+---
+
+Well, I played 4e quite a lot by now. Most time as Dungeon Master, but also some
+sessions as PC.
+
+In my opinion the 3rd edition is great (not perfect, but an improvement compared
+to 3.5). I think, there are several people who dislike the 4th edition. Probably
+the best would be to try the 4e yourself. Everyone has different demands
+concerning role playing games: Some like more the role playing parts, others like
+more the kick-in-the-door style of gaming and want to slay hords of monsters.
+
+Nevertheless, in this post I want to try to state why I like the 4th edition.
+<!--more-->
+
+One of the biggest changes has been the simplification of the rules, but without
+making them to simple. Nearly everything which should be covered in the rules
+seems to be covered to me. The advantages of simpler rules are (IMO):
+
+* New players can faster get to play and do not have to read that much stuff.
+* You can memorize the rules easier. That means less time is wasted by looking
+  stuff up.
+* Not so many rules in the rulebooks you need once in a year, which prevent you
+  from finding what you are really looking for.
+
+Some were complaining that the rules are too much focused on combat. Anyhow,
+I think, you just need more rules for combat to balance the game, while needing
+far less rules for role playing.
+
+Another step forward is the power system. This makes classes like the fighter
+far more interesting, because you do not do the same standard attack each round.
+Each character class has mostly every round in combat the choice between
+different powers.
+
+The power system is one enhancement to the fights, but not the only one.
+Moreover, the terrain, placement and movement has become far more important.
+There are many situation where you get an advantage if you move (or move your
+enemy with a power) to the right spot instead of standing the whole fight at the
+same square.
+
+Another good point is, that you generally won't fight one single enemy, but
+multiple enemies at one time. This also makes the combat more exciting.
+Nevertheless, you can get thrilling boss fight against so called solo monsters
+(like &ndash; of course &ndash; Dragons).
+
+For me as Dungeon Master I can also say, it is much more fun to prepare the
+session in the 4th edition. With 3.5e I had always to think twice if a encounter
+is really balanced and after all I had to see during play that it wasn't. But
+the XP buy system in the 4th edition works out very well and is very easy to
+use.
+
+After all, I want to say some words to the rulebooks: These are much better
+structured than in 3.5e. You find the rules you are looking for much more easier
+and the monster stat blocks are much better to read. Also I like the concept art
+in the core rulebooks (not all new rulebooks).
+
+In spite of all these positive points I have to state one negative point: The
+selection of Magic Items in the Player's Handbook is far to small and those
+items are mostly boring. Therefore you should also buy the Adventurer's Fault,
+which contains tons of magic items.
+
+I hope this article helps. Probably I could say much more, but this should be
+the most important and is what came spontaneously to my mind. I recommend to
+search for other opinions in the web, if you are undecided if you like the 4th
+edition, or even better, as said before, to play it yourself, if you have the
+possibility (maybe in a local game store).

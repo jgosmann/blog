@@ -1,4 +1,6 @@
 import React from "react"
+import PropTypes from "prop-types"
+import { Link } from "gatsby"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
   faCalendarDay,
@@ -13,8 +15,9 @@ const metaCss = {
   marginRight: 16,
 }
 
-const PostItem = () => (
-  <a
+const PostItem = ({ title, date, timeToRead, href }) => (
+  <Link
+    to={href}
     css={{
       border: "1px solid rgba(0, 0, 0, 0)",
       borderBottom: "1px solid #ccc",
@@ -40,19 +43,26 @@ const PostItem = () => (
         marginBottom: "0.2em",
       }}
     >
-      Computational Neuroscience
+      {title}
     </div>
     <FlexList>
       <li css={metaCss}>
         <FontAwesomeIcon icon={faCalendarDay} />
-        &nbsp;May 5, 2012
+        &nbsp;{date}
       </li>
       <li css={metaCss}>
         <FontAwesomeIcon icon={faHourglassHalf} />
-        &nbsp;12 minute read
+        &nbsp;{timeToRead}&nbsp;minute read
       </li>
     </FlexList>
-  </a>
+  </Link>
 )
+
+PostItem.propTypes = {
+  date: PropTypes.string,
+  href: PropTypes.string,
+  timeToRead: PropTypes.number,
+  title: PropTypes.string,
+}
 
 export default PostItem

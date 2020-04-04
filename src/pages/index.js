@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import PropTypes from "prop-types"
 import { Global, css } from "@emotion/core"
 
 import "normalize.css"
@@ -16,7 +17,8 @@ import NavMenuButton, {
 const twoPanesMinWidth = 300 + mainWidth
 const threePanesMinWidth = infoPaneWidth + postsPaneSoftMinWidth + mainWidth
 
-const IndexPage = () => {
+const IndexPage = ({ pageContext }) => {
+  console.log("post", pageContext)
   const [menuActive, setMenuActive] = useState(false)
 
   return (
@@ -25,23 +27,23 @@ const IndexPage = () => {
         styles={css`
           @font-face {
             font-family: "Lato Light";
-            src: url("fonts/LatoLatin-Light.woff2") format("woff2"),
-              url("fonts/LatoLatin-Light.woff") format("woff");
+            src: url("/fonts/LatoLatin-Light.woff2") format("woff2"),
+              url("/fonts/LatoLatin-Light.woff") format("woff");
             font-display: swap;
           }
 
           @font-face {
             font-family: "Lato Light";
-            src: url("fonts/LatoLatin-LightItalic.woff2") format("woff2"),
-              url("fonts/LatoLatin-LightItalic.woff") format("woff");
+            src: url("/fonts/LatoLatin-LightItalic.woff2") format("woff2"),
+              url("/fonts/LatoLatin-LightItalic.woff") format("woff");
             font-style: italic;
             font-display: swap;
           }
 
           @font-face {
             font-family: "Lato Light";
-            src: url("fonts/LatoLatin-Regular.woff2") format("woff2"),
-              url("fonts/LatoLatin-Regular.woff") format("woff");
+            src: url("/fonts/LatoLatin-Regular.woff2") format("woff2"),
+              url("/fonts/LatoLatin-Regular.woff") format("woff");
             font-weight: bold;
             font-display: swap;
           }
@@ -76,10 +78,18 @@ const IndexPage = () => {
           sideBySideDisplayWidth={threePanesMinWidth}
           staticDisplayWidth={twoPanesMinWidth}
         />
-        <Main subPaneDisplayWidth={twoPanesMinWidth} />
+        <Main
+          subPaneDisplayWidth={twoPanesMinWidth}
+          content={pageContext.post ? pageContext.post.html : ""}
+          title={pageContext.post ? pageContext.post.frontmatter.title : ""}
+        />
       </div>
     </div>
   )
+}
+
+IndexPage.propTypes = {
+  pageContext: PropTypes.object,
 }
 
 export default IndexPage
