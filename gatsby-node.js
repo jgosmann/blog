@@ -14,9 +14,9 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
 
   const posts = await graphql(`
     query {
-      allMarkdownRemark {
+      allMdx {
         nodes {
-          html
+          body
           frontmatter {
             title
           }
@@ -35,9 +35,10 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
     return
   }
 
-  posts.data.allMarkdownRemark.nodes.forEach((node) => {
+  posts.data.allMdx.nodes.forEach((node) => {
     createPage({
-      path: "/posts/" + node.parent.name,
+      path:
+        "/posts/" + node.parent.name.replace(/(\d+)-(\d+)-(\d+)-/, "$1/$2/$3/"),
       component: template,
       context: { post: node },
     })

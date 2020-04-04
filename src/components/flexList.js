@@ -26,7 +26,7 @@ const FlexList = ({ children, isOrdered, ...props }) => {
 }
 
 FlexList.propTypes = {
-  children: PropTypes.element,
+  children: PropTypes.arrayOf(PropTypes.element),
   css: PropTypes.object,
   isOrdered: PropTypes.bool,
 }

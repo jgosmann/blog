@@ -1,6 +1,9 @@
 import React, { useState } from "react"
 import PropTypes from "prop-types"
 import { Global, css } from "@emotion/core"
+import { Link } from "gatsby"
+import { MDXProvider } from "@mdx-js/react"
+import { MDXRenderer } from "gatsby-plugin-mdx"
 
 import "normalize.css"
 
@@ -17,42 +20,15 @@ import NavMenuButton, {
 const twoPanesMinWidth = 300 + mainWidth
 const threePanesMinWidth = infoPaneWidth + postsPaneSoftMinWidth + mainWidth
 
+const shortcodes = { Link }
+
 const IndexPage = ({ pageContext }) => {
-  console.log("post", pageContext)
   const [menuActive, setMenuActive] = useState(false)
 
   return (
     <div className="app">
       <Global
         styles={css`
-          @font-face {
-            font-family: "Lato Light";
-            src: url("/fonts/LatoLatin-Light.woff2") format("woff2"),
-              url("/fonts/LatoLatin-Light.woff") format("woff");
-            font-display: swap;
-          }
-
-          @font-face {
-            font-family: "Lato Light";
-            src: url("/fonts/LatoLatin-LightItalic.woff2") format("woff2"),
-              url("/fonts/LatoLatin-LightItalic.woff") format("woff");
-            font-style: italic;
-            font-display: swap;
-          }
-
-          @font-face {
-            font-family: "Lato Light";
-            src: url("/fonts/LatoLatin-Regular.woff2") format("woff2"),
-              url("/fonts/LatoLatin-Regular.woff") format("woff");
-            font-weight: bold;
-            font-display: swap;
-          }
-
-          body {
-            font-family: "Lato Light";
-            font-size: 16;
-          }
-
           html,
           body {
             height: 100%;
@@ -78,11 +54,16 @@ const IndexPage = ({ pageContext }) => {
           sideBySideDisplayWidth={threePanesMinWidth}
           staticDisplayWidth={twoPanesMinWidth}
         />
-        <Main
-          subPaneDisplayWidth={twoPanesMinWidth}
-          content={pageContext.post ? pageContext.post.html : ""}
-          title={pageContext.post ? pageContext.post.frontmatter.title : ""}
-        />
+        {pageContext.post && (
+          <Main
+            subPaneDisplayWidth={twoPanesMinWidth}
+            title={pageContext.post.frontmatter.title}
+          >
+            <MDXProvider components={shortcodes}>
+              <MDXRenderer>{pageContext.post.body}</MDXRenderer>
+            </MDXProvider>
+          </Main>
+        )}
       </div>
     </div>
   )

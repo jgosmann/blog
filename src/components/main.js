@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 
 export const mainWidth = 664
 
-const Main = ({ subPaneDisplayWidth, content, title }) => (
+const Main = ({ subPaneDisplayWidth, children, title }) => (
   <div
     css={{
       overflow: "scroll",
@@ -20,13 +20,15 @@ const Main = ({ subPaneDisplayWidth, content, title }) => (
           paddingTop: 32,
         },
       }}
-      dangerouslySetInnerHTML={{ __html: `<h1>${title}</h1>` + content }}
-    ></main>
+    >
+      <h1>{title}</h1>
+      {children}
+    </main>
   </div>
 )
 
 Main.propTypes = {
-  content: PropTypes.string,
+  children: PropTypes.node,
   subPaneDisplayWidth: PropTypes.number,
   title: PropTypes.string,
 }

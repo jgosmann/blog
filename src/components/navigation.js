@@ -22,7 +22,7 @@ const infoLinkCss = {
 
 const postsQuery = graphql`
   query {
-    allMarkdownRemark(sort: { fields: frontmatter___date, order: DESC }) {
+    allMdx(sort: { fields: frontmatter___date, order: DESC }) {
       nodes {
         timeToRead
         parent {
@@ -141,7 +141,7 @@ const Navigation = ({
             flexDirection: "column",
           }}
         >
-          {data.allMarkdownRemark.nodes.map((post, i) => (
+          {data.allMdx.nodes.map((post, i) => (
             <li
               key={i}
               css={{
@@ -149,7 +149,10 @@ const Navigation = ({
               }}
             >
               <PostItem
-                href={"posts/" + post.parent.name}
+                href={
+                  "/posts/" +
+                  post.parent.name.replace(/(\d+)-(\d+)-(\d+)-/, "$1/$2/$3/")
+                }
                 {...post}
                 {...post.frontmatter}
               />
