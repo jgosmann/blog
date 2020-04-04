@@ -5,7 +5,7 @@ import { faCaretDown } from "@fortawesome/free-solid-svg-icons"
 
 export const height = 40
 
-const NavMenuButton = ({ isOpen, onClick }) => {
+const NavMenuButton = ({ isOpen, onClick, maxDisplayWidth }) => {
   return (
     <button
       css={{
@@ -27,6 +27,10 @@ const NavMenuButton = ({ isOpen, onClick }) => {
         "&:active": {
           boxShadow: "0 0px 1px 0px rgba(0, 0, 0, 0.3)",
         },
+
+        [`@media (min-width: ${maxDisplayWidth}px)`]: {
+          display: "none",
+        },
       }}
       onClick={onClick}
     >
@@ -47,6 +51,7 @@ const NavMenuButton = ({ isOpen, onClick }) => {
 
 NavMenuButton.propTypes = {
   isOpen: PropTypes.bool,
+  maxDisplayWidth: PropTypes.number,
   onClick: PropTypes.func,
 }
 

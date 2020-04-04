@@ -1,9 +1,9 @@
 import React from "react"
-import { css } from "@emotion/core"
+import PropTypes from "prop-types"
 
-const mainWidth = 664
+export const mainWidth = 664
 
-export default () => (
+const Main = ({ subPaneDisplayWidth }) => (
   <main
     css={{
       padding: "64px 32px",
@@ -11,6 +11,10 @@ export default () => (
       overflow: "scroll",
       flexGrow: 1,
       maxWidth: mainWidth,
+      [`@media (min-width: ${subPaneDisplayWidth}px)`]: {
+        height: "100vh",
+        paddingTop: 32,
+      },
     }}
   >
     <div>
@@ -237,3 +241,9 @@ export default () => (
     </div>
   </main>
 )
+
+Main.propTypes = {
+  subPaneDisplayWidth: PropTypes.number,
+}
+
+export default Main

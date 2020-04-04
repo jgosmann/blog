@@ -4,11 +4,17 @@ import { Global, css } from "@emotion/core"
 import "normalize.css"
 
 import SEO from "../components/seo"
-import Main from "../components/main"
-import Navigation from "../components/navigation"
+import Main, { mainWidth } from "../components/main"
+import Navigation, {
+  infoPaneWidth,
+  postsPaneSoftMinWidth,
+} from "../components/navigation"
 import NavMenuButton, {
   height as menuBtnHeight,
 } from "../components/navMenuBtn"
+
+const twoPanesMinWidth = 300 + mainWidth
+const threePanesMinWidth = infoPaneWidth + postsPaneSoftMinWidth + mainWidth
 
 const IndexPage = () => {
   const [menuActive, setMenuActive] = useState(false)
@@ -56,6 +62,7 @@ const IndexPage = () => {
       <NavMenuButton
         isOpen={menuActive}
         onClick={() => setMenuActive(!menuActive)}
+        maxDisplayWidth={twoPanesMinWidth}
       />
       <div
         css={{
@@ -63,8 +70,13 @@ const IndexPage = () => {
           alignItems: "flex-start",
         }}
       >
-        <Navigation isActive={menuActive} top={menuBtnHeight} />
-        <Main />
+        <Navigation
+          isActive={menuActive}
+          top={menuBtnHeight}
+          sideBySideDisplayWidth={threePanesMinWidth}
+          staticDisplayWidth={twoPanesMinWidth}
+        />
+        <Main subPaneDisplayWidth={twoPanesMinWidth} />
       </div>
     </div>
   )

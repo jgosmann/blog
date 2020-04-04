@@ -6,7 +6,9 @@ import PostItem from "./postItem.js"
 
 import me from "./me.png"
 
-const infoPaneWidth = 332
+export const infoPaneWidth = 332
+export const postsPaneSoftMinWidth = 396
+const postsPaneMaxWidth = 564
 
 const infoLinkCss = {
   margin: "0 8px",
@@ -17,7 +19,12 @@ const infoLinkCss = {
   },
 }
 
-const Navigation = ({ isActive, top }) => (
+const Navigation = ({
+  isActive,
+  top,
+  staticDisplayWidth,
+  sideBySideDisplayWidth,
+}) => (
   <nav
     css={{
       position: "fixed",
@@ -28,7 +35,7 @@ const Navigation = ({ isActive, top }) => (
       overflow: "scroll",
       display: "flex",
       height: isActive ? `calc(100vh - ${top}px)` : 0,
-      overflow: "hidden",
+      overflow: "scroll",
       alignItems: "flex-start",
       flexGrow: 0,
       flexWrap: "wrap",
@@ -37,6 +44,18 @@ const Navigation = ({ isActive, top }) => (
       a: {
         textDecoration: "none",
         color: "#000",
+      },
+      [`@media (min-width: ${staticDisplayWidth}px)`]: {
+        position: "static",
+        height: "100vh",
+        width: "auto",
+        flexGrow: 1,
+        transition: "none",
+        overflow: "scroll",
+        maxWidth: infoPaneWidth + postsPaneMaxWidth,
+      },
+      [`@media (min-width: ${sideBySideDisplayWidth}px)`]: {
+        flexWrap: "nowrap",
       },
     }}
   >
@@ -82,7 +101,18 @@ const Navigation = ({ isActive, top }) => (
       </FlexList>
     </div>
 
-    <div css={{ flexGrow: 1, padding: 32, boxSizing: "border-box" }}>
+    <div
+      css={{
+        flexGrow: 1,
+        padding: 32,
+        boxSizing: "border-box",
+        [`@media (min-width: ${sideBySideDisplayWidth}px)`]: {
+          minWidth: postsPaneSoftMinWidth,
+          height: "100vh",
+          overflow: "scroll",
+        },
+      }}
+    >
       <FlexList
         isOrdered={true}
         css={{
@@ -116,6 +146,8 @@ const Navigation = ({ isActive, top }) => (
 
 Navigation.propTypes = {
   isActive: PropTypes.bool,
+  sideBySideDisplayWidth: PropTypes.number,
+  staticDisplayWidth: PropTypes.number,
   top: PropTypes.number,
 }
 
