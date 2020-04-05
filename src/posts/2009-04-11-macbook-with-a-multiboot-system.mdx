@@ -1,0 +1,152 @@
+---
+layout: post
+status: publish
+published: true
+title: Macbook with a Multiboot System
+author: blubb
+excerpt: "<p>A short while ago I bought a 500&nbsp;GB harddrive for my Macbook Pro.
+  To be accurate: It is a Hitachi HTS545050B9A300 from the Travelstar 5K500.B series,
+  which was released at the end of February. A nice thing is not only the additional
+  space, but also that this harddrive consumes a little bit less energy than the original
+  one. But I suppose the effect on the battery life is not very noticeable. The old
+  harddrive is now used as external TimeMachine backup volume in an IcyBox.</p>\r\n<p>But
+  that's not the real reason for writing this post. With the new harddrive I have
+  enough space to run a triple boot system with Mac OS X, Linux and Windows. In most
+  tutorials to set up such an multiboot system is written that you can use only three
+  partitions for it. But this is not absolutly right. Therefore, I will in show in
+  the following post how to set up a multiboot system with more than three partitions
+  and where there are really some limits to the partitioning. Additional to that I
+  will cover problems with NTFS partitions and the msftres flag which may occur if
+  you try to partition your harddrive for such a multiboot system.</p>\r\n"
+wordpress_id: 330
+wordpress_url: http://www.hyper-world.de/en/?p=330
+date: '2009-04-11 11:26:26 -0400'
+date_gmt: '2009-04-11 09:26:26 -0400'
+tags:
+- Mac OS X
+- Apple
+- multiboot
+- tripleboot
+- Macbook
+- Linux
+- Windows
+- partitioning
+- harddrive
+- Hitachi
+- Travelstar
+- NTFS-3G
+- MacFuse
+- OS
+- diskutil
+- Disk Utility
+- GPT
+- MBR
+- file system
+- msftres
+- GParted
+- NTFS
+comments:
+- id: 3846
+  author: Marjolein Katsma (marjoleink) 's status on Saturday, 04-Jul-09 09:33:32
+    UTC - Identi.ca
+  author_email: ''
+  author_url: http://identi.ca/notice/6048495
+  date: '2009-07-04 11:33:47 -0400'
+  date_gmt: '2009-07-04 09:33:47 -0400'
+  content: '[...]  http://www.hyper-world.de/en/2009/04/11/macbook-with-a-multiboot-system/  [...]'
+- id: 5081
+  author: Anonymous
+  author_url: ''
+  date: '2009-09-14 10:45:57 -0400'
+  date_gmt: '2009-09-14 08:45:57 -0400'
+  content: Thank you for the detailed instructions
+---
+
+A short while ago I bought a 500&nbsp;GB harddrive for my Macbook Pro. To be
+accurate: It is a Hitachi HTS545050B9A300 from the Travelstar 5K500.B series,
+which was released at the end of February. A nice thing is not only the
+additional space, but also that this hard drive consumes a little bit less energy
+than the original one. But I suppose the effect on the battery life is not very
+noticeable. The old hard drive is now used as external TimeMachine backup volume
+in an IcyBox.
+
+But that's not the real reason for writing this post. With the new harddrive
+I have enough space to run a triple boot system with Mac OS X, Linux and
+Windows. In most tutorials to set up such an multiboot system is written that
+you can use only three partitions for it. But this is not absolutely right.
+Therefore, I will in show in the following post how to set up a multiboot system
+with more than three partitions and where there are really some limits to the
+partitioning. Additional to that I will cover problems with NTFS partitions and
+the msftres flag which may occur if you try to partition your hard drive for such
+a multiboot system.
+
+<!--more-->
+
+## Step 1: Planning Ahead
+
+Before starting with the installation you should plan the partitioning. (But if
+you want, you may to step 2 first.) The number of partitions is not limited.
+Anyways, Windows will only be able to use the first three partitions. The reason
+is as follows: Mac OS X is using the GPT format for partition tables. Windows,
+however, is using the older MBR partition tables and is not able to use the GPT
+format. Linux is able to use both formats. Luckily, there may be a MBR partition
+table as well as one in the GPT format on one hard disk. In this case is the
+number of partitions limited to four in the MBR partition table. Therefore,
+Windows can use only the first four partitions.
+
+One moment&nbsp;&ndash; didn't I write that Windows can use only the first
+four?! Yes, I have. But the first partition, which has a size about 200MB, has
+to be used for EFI. That is the descendant of the BIOS und is the interface
+between the operating system and the hardware in an Apple computer. The
+according partition is mandatory and is not displayed in the Disk Utility of Mac
+OS X, because its importance. The first three partitions behind this EFI
+partition can be used by Windows. All other partitions can only be used by OS
+X and Linux.
+
+The following table shows my own partitioning and I am commenting why
+I partitioned my hard drive in this way. It may be necessary to change this
+partitioning depending on the usage. I advise that you do not use any spaces in
+the names of the partitions. Well programmed software should not have a problem
+with it, but I experienced already cases where this was a problem (for example
+the Qt configure script is not able to execute correctly if there are any spaces
+the path).
+
+| #  |  Size | File System | Name       | Comment |
+|----|------:|-------------|------------|---------|
+| 0. | 200MB | FAT32       | EFI System | This partition is mandatory for the Mac OS X system and should never be deleted or changed. |
+| 1. |  49GB | HFS+        | MacOS      | The system partition for Mac OS X. It should not be smaller than 20GB because the standard installation already uses 11&ndash;14GB. |
+| 2. | 200MB | ext2        | LinBoot    | This partition will be used to install the bootloader to boot the Linux system. Because this partition is not used for any other stuff it is not necessary to use the journaling file system ext3. |
+| 3. | 165GB | NTFS        | Windows    | This partition is used to install Windows. Games and video data (I use Windows also for video cutting) need much space, therefore I reseverd this much for Windows. |
+| 4. |   4GB | Swap        | LinSwap    | Linux nutzt im Normalfall eine Swap-Partition anstatt einer Auslagerungsdatei. Wenn man das Linuxsystem in den Ruhezustand versetzen möchte, muss die Swap-Partition mindestens so groß sein, wie der Arbeitsspeicher. |
+| 5. |  15GB | ext3        | Linux      | My Linux system and home partition. Because I'm using Linux only for some minor stuff the 15GB are enough space. Moreover I do not save important data on this partition. That is the reason why I use no independet home partition. But a independet home partition is in general a good idea. |
+| 6. | 230GB | HFS+        | Home       | On this partition I save my personal data and documents under OS X. This independent partition has the advantage that I am able to reinstall OS X without backuping my personl data. The size of 230GB it is possible for me to save a complete backup of this partition on my TimeMachine harddrive. |
+
+## Step 2: Install and Setup Mac OS X
+
+1. Firstly, Mac OS X has to be installed. This should be done on a single partition, which fills the whole hard drive. The EFI boot partition will be created automatically.
+2. Afterwards [rEFIt](http://refit.sourceforge.net/) has to be installed. This is the "boot manager" which will allow us to chose one of the operating systems to boot. The download and installation instructions can be found at the rEFIt webpage.
+3. Then [MacFuse](http://code.google.com/p/macfuse/) and [NTFS-3G](http://www.ntfs-3g.org/) have to be installed, whereby the Mac version of NTFS-3G [can be found here]("http://macntfs-3g.blogspot.com/"). Download and installation instructions can be found as always at the corresponding websites. Pay attention to the fact that you have to install MacFuse before installing NTFS-3G, because the later needs the first. When you installed both programs you are able to format partitions with the NTFS file system under Mac OS X as well as writing at these partitions. There are two versions of NTFS-3G. One of those (Ublio) has a better performance, because it is using caching, but if the hard drive is suddenly removed during a write process corrupt data is much more likely. Of course such a sudden removal can only happen by external hard drives. I am using Ublio, even with external hard drives. But once I already had to reformat a NTFS partition on an external hard drive, because of a defect USB cable which interrupted the write process.
+
+## Step 3: Partitioning the Harddrive
+
+1. Launch the Bootcamp assistant and shrink the Mac OS partition to the desired size.
+2. Download the [GParted Live CD](http://gparted.sourceforge.net/livecd.php) image and burn it to a CD.
+3. Boot this CD. To do this press the 'c' or the Alt key after power on.
+4. When the boot process was completed partition the hard drive (see also step 1). It is important that you create NTFS partitions **not** as NTFS partitions. GParted (or to be precise libparted, the library used by GParted) has a bug which makes the NTFS partitions created by GParted unusable and unremovable by Mac OS X. It seems that GParted sets the msftres flag and while doing so changes the file system type of the partition to Microsoft Reserved. Unfortunately it is not possible to remove this flag. Therefore you should create NTFS partitions as FAT oder ext2/ext3 partitions. We will reformat them in the next step.
+5. If you created another NTFS partition beneath the one for the Windows installation, it should be possible to format them in the Disk Utility of Mac OS X in theory. But for me that wasn't working. Luckily it works with the equivalent command line utility diskutil. If you open a Terminal you can show the current partitioning with the command `diskutil list`. The "/dev/diskX" lines indicate the hard drives whereby the X is number of the corresponding hard drive. To format a partition with a NTFS file system you can use the following command: `diskutil eraseVolume "NTFS-3G" <name> /dev/diskXsY`. Thereby you have to replace &lt;name&gt; with the name the partition should get, X with the number of the hard drive and Y with the number of the partition. X and Y can be found the output of `diskutil list`.
+6. After the partitioning is completed you restart the computer and chose in the rEFIt menu "Start Partitioning Tool". That will rewrite the MBR partition table synchronizing it with the GPT partition table to contain the first four partitions. You can execute the partitioning tool a second time to ensure if the MBR was written correctly. If that's the case the tool will tell you that there is no need to sync the partition tables.
+
+## Step 4: Install Addtional Operating Systems
+
+1. Now you are ready to install Windows. To do so, boot from the Windows installation CD (like you did before with the GParted Live CD). Be sure to chose the correct partition during the installation and to format it with NTFS.
+2. After you installed Windows you can install linux. Pay attention to the following: The LinBoot partition should be mounted as "/boot", the Linux main partition as "/" and the swap partition as swap partition. Moreover you should not install the bootloader (probably Grub) into the MBR, but into the LinBoot-Partition.
+3. After the installation of these operating systems you may need to run the rEFIt "Partitioning Tool" again, to be able to boot these systems.
+
+This should be all steps needed to setup a triple boot system on a Macbook. If
+install NTFS-3G also under Linux all three OS can exchange files via the Windows
+partition.
+
+## Further Information
+
+* [Another tutorial](http://support.river-valley.com/wiki/index.php?title=Notes_on_MacBook_Pro_Unibody) about this topic which was very helpful for me.
+

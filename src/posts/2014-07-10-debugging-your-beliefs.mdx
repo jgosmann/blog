@@ -1,0 +1,76 @@
+---
+layout: post
+title: Debugging Your Beliefs
+date: "2014-07-10"
+excerpt: "<p>A few days ago I wrote this tweet:</p>
+  <blockquote><p>Debugging is often about uncovering your implicit assumptions
+  and verifying that they actually hold.</p></blockquote>
+  <p>There is actually a lot to discover in this short statement and it even
+  touches social issues. But for starters, let us take a look how bugs in
+  computer programs come about.</p>"
+---
+
+A few days ago I wrote this tweet:
+
+> Debugging is often about uncovering your implicit assumptions and verifying
+> that they actually hold. &mdash;
+> [Jan Gosmann (@jgosmann), July 4, 2014](https://twitter.com/hyper_world/statuses/485073632415469568)
+
+There is actually a lot to discover in this short statement and it even
+touches social issues. But for starters, let us take a look how bugs in computer
+programs come about.
+
+# How bugs are made
+
+I think, there are at least two main reasons why bugs in computer programs
+occur. Sometimes the programmer just mistypes something. By double checking the
+code this is usually easy to find.
+
+A second type of bug, however, is much harder to locate. It is the result of
+implicit assumptions made by the programmer. When programming you make every now
+and then an assumption how a programming language behaves or what a certain
+function call does without even being aware of this in that moment. As long as
+these assumptions are correct everything is fine.  But when relying on a wrong
+assumption things might go awry.
+
+I have a recent example of my own (which can be skipped over if you are not keen
+on programming itself). I wanted to create a list of `size` empty lists for
+which I wrote the following Python code:
+
+```python
+[[]] * size
+```
+
+Can you spot my assumptions here? I am assuming a new list instance will be
+created when replicating `[]` and, thus, that all lists contained in the outer
+list will be different instances which can changed individually. However, a list
+containing a single list instance will be created first and then the reference
+to that same instance gets replicated. Thus, modifying one of the inner lists
+will modify all of them.
+
+# How bugs are found
+
+How does one find such bugs? Essentially, it is necessary become aware of
+implicit beliefs and verify that they are correct. Once I realized what
+assumptions I was making in the example above it was easy to verify that the
+code does not produce independent list instances. Fixing the bug was then
+a matter of seconds. The hard part is to achieve awareness of implicit
+assumptions. It all comes down to the question: How do you become consciousness
+of something unconsciousness?
+
+Sometimes another person can be of help. That person will have another set of
+presumptions and can therefore be able to spot such bugs more easily. This is
+a good reason to do code reviews and/or pair programming.
+
+But what if you are on your own? In that case, I do not know.
+
+Part of it is probably experience and practice. But I wonder: Are there methods
+to train becoming aware of implicit assumptions?
+
+# Why does it matter to non-programmers?
+
+Implicit beliefs do not only exist in programming. They are part of our everyday
+life. Everyone has some assumptions about the persons he or she meets without
+even being aware of it. Nevertheless, they influence how we interact with each
+other. Teaching people about uncovering their implicit assumptions might have
+the potential to make the world a better and fairer place.
