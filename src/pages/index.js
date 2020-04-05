@@ -16,6 +16,7 @@ import Navigation, {
 import NavMenuButton, {
   height as menuBtnHeight,
 } from "../components/navMenuBtn"
+import Toc from "../components/toc"
 
 const twoPanesMinWidth = 300 + mainWidth
 const threePanesMinWidth = infoPaneWidth + postsPaneSoftMinWidth + mainWidth
@@ -59,7 +60,14 @@ const IndexPage = ({ pageContext }) => {
             subPaneDisplayWidth={twoPanesMinWidth}
             title={pageContext.post.frontmatter.title}
           >
-            <MDXProvider components={shortcodes}>
+            <MDXProvider
+              components={{
+                Toc: () => (
+                  <Toc items={pageContext.post.tableOfContents.items} />
+                ),
+                ...shortcodes,
+              }}
+            >
               <MDXRenderer>{pageContext.post.body}</MDXRenderer>
             </MDXProvider>
           </Main>
