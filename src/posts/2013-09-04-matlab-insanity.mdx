@@ -1,0 +1,72 @@
+---
+layout: post
+status: publish
+published: true
+title: MATLAB Insanity
+excerpt: "There are complete blogs
+  devoted to the quirks of MATLAB. Anyways, here is another post on the topic
+  and how some minor quirks produce a hard to find bug. Look at the following code:\r\n`rand(rngStreams{obj.rngId},
+  2, 1)`\r\n"
+wordpress_id: 656
+wordpress_url: http://www.hyper-world.de/en/?p=656
+date: '2013-09-04 20:48:53 -0400'
+date_gmt: '2013-09-04 20:48:53 -0400'
+tags:
+- programming
+- random
+- MATLAB
+- Python
+- insane
+- syntax
+- random number generation
+- programming languages
+comments: []
+---
+
+There are [complete blogs devoted to the quirks of
+MATLAB](http://abandonmatlab.wordpress.com/). Anyways, here is another post on
+the topic and how some minor quirks produce a hard to find bug. Look at the
+following code:
+
+```matlab
+rand(rngStreams{obj.rngId}, 2, 1)
+```
+
+<!--more-->
+
+It is supposed to produce two random numbers generated from a random number
+generation stream which has been initialized with a specific seed (to always get
+the same sequence). However, when debugging this code I realized that the
+numbers were generated from the default stream and not
+`rngStreams{rngId}`. Thus, effectively ignoring the seed used for
+initialization. Can you spot what may cause the problem?
+
+Here it comes: Someone forgot to initialize `obj.rngId`. As it is
+declared as a property on an object there is no warning and the property gets
+initialized with a default value. So far I consider this an acceptable behavior.
+However, the default value is an empty matrix `[]` and this leads to
+some funny behavior together with the cell array `rngStreams`.
+
+If you use an empty array to index a cell array, MATLAB will return
+… *nothing*?! Not `null`, `none`, `nil`
+or an empty cell array, but just nothing. And with nothing the code snippet
+above becomes:
+
+```matlab
+rand(2, 1)
+```
+
+And that's the latest point in time where an error should be produced.
+Obviously, the writer of the code intended to call the function with three
+arguments. But whatever, if one of the arguments goes just missing what harm
+does it do? We just leave the program producing the wrong random numbers and the
+user thinking everything's fine!
+
+The sad thing is that this kind of behavior with MATLAB is not a one time
+experience for me. I stumble again and again over similar behavior where some
+code seems to be working but is not. Moreover, all of these problems could be
+prevented without loss if MATLAB was stricter on the number of arguments passed
+to a function and types (i.e. returning an empty cell array instead of nothing).
+
+Unfortunately it is not. So, use Python or R or whatever. But no MATLAB!
+

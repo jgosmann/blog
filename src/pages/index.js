@@ -35,6 +35,10 @@ const IndexPage = ({ pageContext }) => {
             height: 100%;
             overflow: ${menuActive ? "hidden" : "scroll"};
           }
+
+          code:after {
+            content: "";
+          }
         `}
       />
       <SEO title="Home" />
