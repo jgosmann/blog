@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import PropTypes from "prop-types"
 import { graphql, useStaticQuery } from "gatsby"
 
@@ -9,7 +9,7 @@ import me from "./me.png"
 
 export const infoPaneWidth = 332
 export const postsPaneSoftMinWidth = 396
-const postsPaneMaxWidth = 564
+export const postsPaneMaxWidth = 564
 
 const infoLinkCss = {
   margin: "0 8px",
@@ -39,53 +39,37 @@ const postsQuery = graphql`
   }
 `
 
-const Navigation = ({
-  isActive,
-  top,
-  staticDisplayWidth,
-  sideBySideDisplayWidth,
-}) => {
+const Navigation = (props) => {
+  useEffect(() => {
+    const active = document.getElementsByClassName("activePostItem")
+    if (active.length > 0) {
+      active[0].scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest",
+      })
+    }
+  }, [])
   const data = useStaticQuery(postsQuery)
   return (
     <nav
       css={{
-        position: "fixed",
-        background: "#fff",
-        top: top,
-        left: 0,
-        width: "100%",
-        overflow: "scroll",
         display: "flex",
-        height: isActive ? `calc(100vh - ${top}px)` : 0,
-        overflow: "scroll",
         alignItems: "flex-start",
-        flexGrow: 0,
         flexWrap: "wrap",
         justifyContent: "center",
-        transition: "height 250ms ease-out",
         a: {
           textDecoration: "none",
           color: "#000",
         },
-        [`@media (min-width: ${staticDisplayWidth}px)`]: {
-          position: "static",
-          height: "100vh",
-          width: "auto",
-          flexGrow: 1,
-          transition: "none",
-          overflow: "scroll",
-          maxWidth: infoPaneWidth + postsPaneMaxWidth,
-        },
-        [`@media (min-width: ${sideBySideDisplayWidth}px)`]: {
-          flexWrap: "nowrap",
-        },
       }}
+      {...props}
     >
       <div
         css={{
           padding: "32px 32px 0",
           boxSizing: "border-box",
-          maxWidth: infoPaneWidth,
+          width: infoPaneWidth,
           textAlign: "center",
         }}
       >
@@ -126,13 +110,11 @@ const Navigation = ({
       <div
         css={{
           flexGrow: 1,
+          flexShrink: 1,
           padding: 32,
+          minWidth: postsPaneSoftMinWidth,
+          width: postsPaneMaxWidth,
           boxSizing: "border-box",
-          [`@media (min-width: ${sideBySideDisplayWidth}px)`]: {
-            minWidth: postsPaneSoftMinWidth,
-            height: "100vh",
-            overflow: "scroll",
-          },
         }}
       >
         <FlexList
@@ -164,11 +146,6 @@ const Navigation = ({
   )
 }
 
-Navigation.propTypes = {
-  isActive: PropTypes.bool,
-  sideBySideDisplayWidth: PropTypes.number,
-  staticDisplayWidth: PropTypes.number,
-  top: PropTypes.number,
-}
+Navigation.propTypes = {}
 
 export default Navigation

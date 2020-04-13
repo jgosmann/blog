@@ -3,22 +3,17 @@ import PropTypes from "prop-types"
 
 export const mainWidth = 664
 
-const Main = ({ subPaneDisplayWidth, children, title }) => (
+const Main = ({ children, title }) => (
   <div
     css={{
-      overflow: "scroll",
       flexGrow: 1,
     }}
   >
     <main
       css={{
-        padding: "64px 32px",
+        padding: "32px 32px 64px",
         boxSizing: "border-box",
         maxWidth: mainWidth,
-        [`@media (min-width: ${subPaneDisplayWidth}px)`]: {
-          height: "100vh",
-          paddingTop: 32,
-        },
       }}
     >
       <h1>{title}</h1>
@@ -29,7 +24,6 @@ const Main = ({ subPaneDisplayWidth, children, title }) => (
 
 Main.propTypes = {
   children: PropTypes.node,
-  subPaneDisplayWidth: PropTypes.number,
   title: PropTypes.string,
 }
 

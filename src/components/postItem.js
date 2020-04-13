@@ -36,6 +36,12 @@ const PostItem = ({ title, date, timeToRead, href }) => (
         border: "1px solid #ccc",
       },
     }}
+    activeStyle={{
+      backgroundColor: "#444",
+      borderRadius: 8,
+      color: "#fff",
+    }}
+    activeClassName="activePostItem"
   >
     <div
       css={{
