@@ -90,7 +90,7 @@ const Navigation = (props) => {
           }}
         >
           <li>
-            <a css={infoLinkCss} href="">
+            <a css={infoLinkCss} href="https://jgosmann.de">
               About me
             </a>
           </li>
