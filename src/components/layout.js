@@ -7,14 +7,44 @@ import "normalize.css"
 import SEO from "../components/seo"
 import Navigation from "./navigation"
 import PostLayout from "./postLayout"
+import { highlight, highlightShade } from "../colors.js"
 
 const Layout = ({ children, pageContext }) => {
   return (
     <div className="app">
       <Global
         styles={css`
-          code:after {
-            content: "";
+          a {
+            color: ${highlight};
+            text-decoration: none;
+          }
+
+          a:hover {
+            text-decoration: underline;
+          }
+
+          a:visited {
+            color: ${highlightShade};
+          }
+
+          a:active {
+            text-decoration: underline;
+            color: #888;
+          }
+
+          pre {
+            border-radius: 4px;
+            box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+          }
+
+          table {
+            border-collapse: collapse;
+          }
+
+          td,
+          th {
+            padding: 4px;
+            border-color: #444;
           }
         `}
       />

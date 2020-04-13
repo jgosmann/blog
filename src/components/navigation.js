@@ -4,6 +4,7 @@ import { graphql, useStaticQuery } from "gatsby"
 
 import FlexList from "./flexList"
 import PostItem from "./postItem.js"
+import { highlight } from "../colors"
 
 import me from "./me.png"
 
@@ -16,7 +17,7 @@ const infoLinkCss = {
   textTransform: "uppercase",
   fontSize: "0.6em",
   "&:hover": {
-    color: "#336bc5",
+    color: highlight,
   },
 }
 

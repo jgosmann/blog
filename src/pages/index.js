@@ -4,7 +4,7 @@ import { Link } from "gatsby"
 import { MDXProvider } from "@mdx-js/react"
 import { MDXRenderer } from "gatsby-plugin-mdx"
 
-import "normalize.css"
+import "prismjs/themes/prism.css"
 
 import Main from "../components/main"
 import Toc from "../components/toc"

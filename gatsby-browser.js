@@ -5,8 +5,6 @@
  */
 
 // You can delete this file if you're not using it
-import "prismjs/themes/prism.css"
-
 import React from "react"
 import Layout from "./src/components/layout"
 
