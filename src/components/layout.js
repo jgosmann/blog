@@ -4,7 +4,8 @@ import { Global, css } from "@emotion/core"
 
 import "normalize.css"
 
-import SEO from "../components/seo"
+import SEO from "./seo"
+import LanguageContext from "./languageContext"
 import Navigation from "./navigation"
 import PostLayout from "./postLayout"
 import { highlight, highlightShade } from "../colors.js"
@@ -12,50 +13,52 @@ import { highlight, highlightShade } from "../colors.js"
 const Layout = ({ children, pageContext }) => {
   return (
     <div className="app">
-      <Global
-        styles={css`
-          a {
-            color: ${highlight};
-            text-decoration: none;
-          }
+      <LanguageContext.Provider value={pageContext.lang || "en"}>
+        <Global
+          styles={css`
+            a {
+              color: ${highlight};
+              text-decoration: none;
+            }
 
-          a:hover {
-            text-decoration: underline;
-          }
+            a:hover {
+              text-decoration: underline;
+            }
 
-          a:visited {
-            color: ${highlightShade};
-          }
+            a:visited {
+              color: ${highlightShade};
+            }
 
-          a:active {
-            text-decoration: underline;
-            color: #888;
-          }
+            a:active {
+              text-decoration: underline;
+              color: #888;
+            }
 
-          pre {
-            border-radius: 4px;
-            box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
-          }
+            pre {
+              border-radius: 4px;
+              box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+            }
 
-          table {
-            border-collapse: collapse;
-          }
+            table {
+              border-collapse: collapse;
+            }
 
-          td,
-          th {
-            padding: 4px;
-            border-color: #444;
-          }
-        `}
-      />
-      <SEO title="Home" />
-      {pageContext.type == "posts" ? (
-        <PostLayout>{children}</PostLayout>
-      ) : pageContext.type == "legal" ? (
-        <>{children}</>
-      ) : (
-        <Navigation />
-      )}
+            td,
+            th {
+              padding: 4px;
+              border-color: #444;
+            }
+          `}
+        />
+        <SEO title="Home" />
+        {pageContext.type == "posts" ? (
+          <PostLayout>{children}</PostLayout>
+        ) : pageContext.type == "legal" ? (
+          <>{children}</>
+        ) : (
+          <Navigation />
+        )}
+      </LanguageContext.Provider>
     </div>
   )
 }

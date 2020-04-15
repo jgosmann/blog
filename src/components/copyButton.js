@@ -1,15 +1,18 @@
-import React from "react"
+import React, { useContext } from "react"
 import PropTypes from "prop-types"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCopy } from "@fortawesome/free-solid-svg-icons"
 
 import ButtonLink from "./buttonLink"
+import LanguageContext from "./languageContext"
 
 const CopyButton = ({ getCopyText }) => {
+  const lang = useContext(LanguageContext)
+
   const onClick = () => {
     navigator.clipboard.writeText(getCopyText())
   }
-  const title = document.documentElement.lang === "de" ? "Kopieren" : "Copy"
+  const title = lang === "de" ? "Kopieren" : "Copy"
   return (
     <ButtonLink onClick={onClick} title={title}>
       <FontAwesomeIcon icon={faCopy} />

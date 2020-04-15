@@ -19,6 +19,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
         nodes {
           body
           frontmatter {
+            language
             title
           }
           parent {
@@ -52,7 +53,12 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
         node.parent.sourceInstanceName == "legal"
           ? legalTemplate
           : defaultTemplate,
-      context: { type: node.parent.sourceInstanceName, node, pagePath: path },
+      context: {
+        type: node.parent.sourceInstanceName,
+        node,
+        pagePath: path,
+        lang: node.frontmatter.language || "en",
+      },
     })
   })
 }
