@@ -49,7 +49,13 @@ const Layout = ({ children, pageContext }) => {
         `}
       />
       <SEO title="Home" />
-      {pageContext.post ? <PostLayout>{children}</PostLayout> : <Navigation />}
+      {pageContext.type == "posts" ? (
+        <PostLayout>{children}</PostLayout>
+      ) : pageContext.type == "legal" ? (
+        <>{children}</>
+      ) : (
+        <Navigation />
+      )}
     </div>
   )
 }

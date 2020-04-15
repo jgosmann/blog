@@ -17,6 +17,13 @@ module.exports = {
       },
     },
     {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `legal`,
+        path: `${__dirname}/src/legal`,
+      },
+    },
+    {
       resolve: `gatsby-plugin-mdx`,
       options: {
         remarkPlugins: [remarkSlug],

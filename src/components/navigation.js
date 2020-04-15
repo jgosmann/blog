@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 import PropTypes from "prop-types"
-import { graphql, useStaticQuery } from "gatsby"
+import { graphql, Link, useStaticQuery } from "gatsby"
 
 import FlexList from "./flexList"
 import PostItem from "./postItem.js"
@@ -29,6 +29,7 @@ const postsQuery = graphql`
         parent {
           ... on File {
             name
+            sourceInstanceName
           }
         }
         frontmatter {
@@ -96,14 +97,14 @@ const Navigation = (props) => {
             </a>
           </li>
           <li>
-            <a css={infoLinkCss} href="">
+            <Link css={infoLinkCss} to="/legal/privacy">
               Privacy policy
-            </a>
+            </Link>
           </li>
           <li>
-            <a css={infoLinkCss} href="">
+            <Link css={infoLinkCss} to="/legal/disclosure">
               Legal notice
-            </a>
+            </Link>
           </li>
         </FlexList>
       </div>
@@ -124,23 +125,25 @@ const Navigation = (props) => {
             flexDirection: "column",
           }}
         >
-          {data.allMdx.nodes.map((post, i) => (
-            <li
-              key={i}
-              css={{
-                margin: i > 0 ? "16px 0" : 0,
-              }}
-            >
-              <PostItem
-                href={
-                  "/posts/" +
-                  post.parent.name.replace(/(\d+)-(\d+)-(\d+)-/, "$1/$2/$3/")
-                }
-                {...post}
-                {...post.frontmatter}
-              />
-            </li>
-          ))}
+          {data.allMdx.nodes
+            .filter((node) => node.parent.sourceInstanceName == "posts")
+            .map((post, i) => (
+              <li
+                key={i}
+                css={{
+                  margin: i > 0 ? "16px 0" : 0,
+                }}
+              >
+                <PostItem
+                  href={
+                    "/posts/" +
+                    post.parent.name.replace(/(\d+)-(\d+)-(\d+)-/, "$1/$2/$3/")
+                  }
+                  {...post}
+                  {...post.frontmatter}
+                />
+              </li>
+            ))}
         </FlexList>
       </div>
     </nav>

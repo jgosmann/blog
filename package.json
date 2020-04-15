@@ -11,6 +11,7 @@
     "@fortawesome/react-fontawesome": "^0.1.9",
     "@mdx-js/mdx": "^1.5.8",
     "@mdx-js/react": "^1.5.8",
+    "flag-icon-css": "^3.4.6",
     "gatsby": "^2.20.10",
     "gatsby-image": "^2.3.1",
     "gatsby-plugin-emotion": "^4.2.1",

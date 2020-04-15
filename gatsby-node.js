@@ -10,7 +10,8 @@ const path = require("path")
 exports.createPages = async ({ actions, graphql, reporter }) => {
   const { createPage } = actions
 
-  const template = path.resolve("src/pages/index.js")
+  const defaultTemplate = path.resolve("src/pages/index.js")
+  const legalTemplate = path.resolve("src/pages/legal.js")
 
   const posts = await graphql(`
     query {
@@ -23,6 +24,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
           parent {
             ... on File {
               name
+              sourceInstanceName
             }
           }
           tableOfContents
@@ -37,11 +39,20 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
   }
 
   posts.data.allMdx.nodes.forEach((node) => {
+    let name = node.parent.name
+    if (node.parent.sourceInstanceName == "posts") {
+      name = name.replace(/(\d+)-(\d+)-(\d+)-/, "$1/$2/$3/")
+    } else if (node.parent.sourceInstanceName == "legal") {
+      name = name.replace(/\.(..)$/, "/$1")
+    }
+    const path = `/${node.parent.sourceInstanceName}/${name}`
     createPage({
-      path:
-        "/posts/" + node.parent.name.replace(/(\d+)-(\d+)-(\d+)-/, "$1/$2/$3/"),
-      component: template,
-      context: { post: node },
+      path,
+      component:
+        node.parent.sourceInstanceName == "legal"
+          ? legalTemplate
+          : defaultTemplate,
+      context: { type: node.parent.sourceInstanceName, node, pagePath: path },
     })
   })
 }

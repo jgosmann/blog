@@ -1,28 +1,14 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { Link } from "gatsby"
-import { MDXProvider } from "@mdx-js/react"
-import { MDXRenderer } from "gatsby-plugin-mdx"
-
-import "prismjs/themes/prism.css"
 
 import Main from "../components/main"
-import Toc from "../components/toc"
-
-const shortcodes = { Link }
+import MdxContent from "../components/mdxContent"
 
 const IndexPage = ({ pageContext }) => {
-  if (pageContext.post) {
+  if (pageContext.node) {
     return (
-      <Main title={pageContext.post.frontmatter.title}>
-        <MDXProvider
-          components={{
-            Toc: () => <Toc items={pageContext.post.tableOfContents.items} />,
-            ...shortcodes,
-          }}
-        >
-          <MDXRenderer>{pageContext.post.body}</MDXRenderer>
-        </MDXProvider>
+      <Main title={pageContext.node.frontmatter.title}>
+        <MdxContent node={pageContext.node} />
       </Main>
     )
   } else {
