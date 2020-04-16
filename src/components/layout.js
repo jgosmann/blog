@@ -34,6 +34,15 @@ const Layout = ({ children, pageContext }) => {
               color: #888;
             }
 
+            blockquote {
+              border: 1px solid #888;
+              border-left: 4px solid #888;
+              border-radius: 4px;
+              box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+              margin-left: 4px;
+              padding-left: 8px;
+            }
+
             pre {
               border-radius: 4px;
               box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
