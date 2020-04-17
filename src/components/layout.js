@@ -62,7 +62,11 @@ const Layout = ({ children, pageContext, location }) => {
             }
           `}
         />
-        <SEO title="Home" />
+        <SEO
+          title={
+            (pageContext.node && pageContext.node.frontmatter.title) || "Home"
+          }
+        />
         {pageContext.type == "posts" ? (
           <PostLayout path={location.pathname}>{children}</PostLayout>
         ) : (
