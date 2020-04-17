@@ -6,7 +6,6 @@ import "normalize.css"
 
 import SEO from "./seo"
 import LanguageContext from "./languageContext"
-import Navigation from "./navigation"
 import PostLayout from "./postLayout"
 import { highlight, highlightShade } from "../colors.js"
 
