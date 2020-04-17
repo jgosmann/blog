@@ -36,6 +36,17 @@ const PostLayout = ({ children, path }) => {
           }
         `}
       />
+      <div
+        css={{
+          marginTop: 32,
+          [breakpointThreePanes]: {
+            marginLeft: infoPaneWidth + postsPaneMaxWidth,
+            marginTop: 0,
+          },
+        }}
+      >
+        {children}
+      </div>
       <NavMenuButton
         isOpen={menuActive}
         onClick={() => setMenuActive(!menuActive)}
@@ -69,17 +80,6 @@ const PostLayout = ({ children, path }) => {
           },
         }}
       />
-      <div
-        css={{
-          marginTop: 32,
-          [breakpointThreePanes]: {
-            marginLeft: infoPaneWidth + postsPaneMaxWidth,
-            marginTop: 0,
-          },
-        }}
-      >
-        {children}
-      </div>
     </>
   )
 }
