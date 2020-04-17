@@ -8,6 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons"
 
 import FlexList from "./flexList"
+import FlagDe from "./flagDe"
 
 const metaCss = {
   fontSize: "0.9em",
@@ -15,7 +16,7 @@ const metaCss = {
   marginRight: 16,
 }
 
-const PostItem = ({ title, date, timeToRead, href }) => (
+const PostItem = ({ title, date, timeToRead, href, language }) => (
   <Link
     to={href}
     css={{
@@ -52,11 +53,16 @@ const PostItem = ({ title, date, timeToRead, href }) => (
       {title}
     </div>
     <FlexList>
-      <li css={metaCss}>
+      {language == "de" && (
+        <li css={metaCss} title="German post/Deutscher Beitrag">
+          <FlagDe />
+        </li>
+      )}
+      <li css={metaCss} title="Date posted">
         <FontAwesomeIcon icon={faCalendarDay} />
         &nbsp;{date}
       </li>
-      <li css={metaCss}>
+      <li css={metaCss} title="Estimated time to read">
         <FontAwesomeIcon icon={faHourglassHalf} />
         &nbsp;{timeToRead}&nbsp;minute read
       </li>
@@ -65,10 +71,11 @@ const PostItem = ({ title, date, timeToRead, href }) => (
 )
 
 PostItem.propTypes = {
-  date: PropTypes.string,
-  href: PropTypes.string,
-  timeToRead: PropTypes.number,
-  title: PropTypes.string,
+  date: PropTypes.string.required,
+  href: PropTypes.string.required,
+  language: PropTypes.oneOf(["de", "en"]),
+  timeToRead: PropTypes.number.required,
+  title: PropTypes.string.required,
 }
 
 export default PostItem

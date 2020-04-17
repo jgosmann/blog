@@ -35,6 +35,7 @@ const postsQuery = graphql`
         frontmatter {
           title
           date(formatString: "MMMM D, Y")
+          language
         }
       }
     }
