@@ -25,6 +25,11 @@ const PostLayout = ({ children, path }) => {
       setMenuActive(false)
     }
   })
+  useEffect(() => {
+    const hideMenu = () => setMenuActive(false)
+    window.addEventListener("resize", hideMenu)
+    return () => window.removeEventListener("resize", hideMenu)
+  }, [])
 
   return (
     <>
