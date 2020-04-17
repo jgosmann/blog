@@ -57,6 +57,10 @@ const Layout = ({ children, pageContext, location }) => {
               padding: 4px;
               border-color: #444;
             }
+
+            [data-prefix="fas"] {
+              height: 1em;
+            }
           `}
         />
         <SEO title="Home" />
