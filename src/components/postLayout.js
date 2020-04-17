@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import PropTypes from "prop-types"
 import { Global, css } from "@emotion/core"
 
@@ -16,8 +16,16 @@ import NavMenuButton, {
 const threePanesMinWidth = infoPaneWidth + postsPaneMaxWidth + mainWidth
 const breakpointThreePanes = `@media (min-width: ${threePanesMinWidth}px)`
 
-const PostLayout = ({ children }) => {
+const PostLayout = ({ children, path }) => {
   const [menuActive, setMenuActive] = useState(false)
+  const [lastPath, setLastPath] = useState(path)
+  useEffect(() => {
+    if (lastPath !== path) {
+      setLastPath(path)
+      setMenuActive(false)
+    }
+  })
+
   return (
     <>
       <Global
@@ -77,7 +85,8 @@ const PostLayout = ({ children }) => {
 }
 
 PostLayout.propTypes = {
-  children: PropTypes.node,
+  children: PropTypes.node.required,
+  path: PropTypes.string.required,
 }
 
 export default PostLayout

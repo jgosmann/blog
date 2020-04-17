@@ -10,7 +10,7 @@ import Navigation from "./navigation"
 import PostLayout from "./postLayout"
 import { highlight, highlightShade } from "../colors.js"
 
-const Layout = ({ children, pageContext }) => {
+const Layout = ({ children, pageContext, location }) => {
   return (
     <div className="app">
       <LanguageContext.Provider value={pageContext.lang || "en"}>
@@ -61,7 +61,7 @@ const Layout = ({ children, pageContext }) => {
         />
         <SEO title="Home" />
         {pageContext.type == "posts" ? (
-          <PostLayout>{children}</PostLayout>
+          <PostLayout path={location.pathname}>{children}</PostLayout>
         ) : (
           <>{children}</>
         )}
@@ -73,6 +73,7 @@ const Layout = ({ children, pageContext }) => {
 Layout.propTypes = {
   children: PropTypes.node.required,
   pageContext: PropTypes.object.required,
+  location: PropTypes.shape({ pathname: PropTypes.string.required }).required,
 }
 
 export default Layout
