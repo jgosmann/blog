@@ -62,10 +62,8 @@ const Layout = ({ children, pageContext }) => {
         <SEO title="Home" />
         {pageContext.type == "posts" ? (
           <PostLayout>{children}</PostLayout>
-        ) : pageContext.type == "legal" ? (
-          <>{children}</>
         ) : (
-          <Navigation />
+          <>{children}</>
         )}
       </LanguageContext.Provider>
     </div>
@@ -73,8 +71,8 @@ const Layout = ({ children, pageContext }) => {
 }
 
 Layout.propTypes = {
-  children: PropTypes.node,
-  pageContext: PropTypes.object,
+  children: PropTypes.node.required,
+  pageContext: PropTypes.object.required,
 }
 
 export default Layout

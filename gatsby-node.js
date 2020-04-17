@@ -10,8 +10,8 @@ const path = require("path")
 exports.createPages = async ({ actions, graphql, reporter }) => {
   const { createPage } = actions
 
-  const defaultTemplate = path.resolve("src/pages/index.js")
-  const legalTemplate = path.resolve("src/pages/legal.js")
+  const defaultTemplate = path.resolve("src/templates/post.js")
+  const legalTemplate = path.resolve("src/templates/legal.js")
 
   const posts = await graphql(`
     query {

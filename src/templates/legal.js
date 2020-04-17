@@ -2,7 +2,6 @@ import React from "react"
 import PropTypes from "prop-types"
 
 import BackLink from "../components/backLink"
-import FlexList from "../components/flexList"
 import LanguageSwitcher from "../components/languageSwitcher"
 import MdxContent from "../components/mdxContent"
 
@@ -30,7 +29,7 @@ const LegalPage = ({ pageContext }) => (
 )
 
 LegalPage.propTypes = {
-  pageContext: PropTypes.object,
+  pageContext: PropTypes.object.required,
 }
 
 export default LegalPage
