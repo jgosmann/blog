@@ -13,7 +13,9 @@ import NavMenuButton, {
   height as menuBtnHeight,
 } from "../components/navMenuBtn"
 
+const twoPanesMinWidth = postsPaneMaxWidth + mainWidth
 const threePanesMinWidth = infoPaneWidth + postsPaneMaxWidth + mainWidth
+const breakpointTwoPanes = `@media (min-width: ${twoPanesMinWidth}px)`
 const breakpointThreePanes = `@media (min-width: ${threePanesMinWidth}px)`
 
 const PostLayout = ({ children, pathname }) => {
@@ -44,9 +46,12 @@ const PostLayout = ({ children, pathname }) => {
       <div
         css={{
           marginTop: 32,
+          [breakpointTwoPanes]: {
+            marginLeft: postsPaneMaxWidth,
+            marginTop: 0,
+          },
           [breakpointThreePanes]: {
             marginLeft: infoPaneWidth + postsPaneMaxWidth,
-            marginTop: 0,
           },
         }}
       >
@@ -57,7 +62,7 @@ const PostLayout = ({ children, pathname }) => {
         onClick={() => setMenuActive(!menuActive)}
         css={{
           display: children ? "block" : "none",
-          [breakpointThreePanes]: {
+          [breakpointTwoPanes]: {
             display: "none",
           },
         }}
@@ -73,10 +78,14 @@ const PostLayout = ({ children, pathname }) => {
           overflow: "scroll",
           transition: "height 250ms ease-out",
           backgroundColor: "#fff",
-          [breakpointThreePanes]: {
+          [breakpointTwoPanes]: {
+            width: postsPaneMaxWidth,
             top: 0,
             height: "100%",
+          },
+          [breakpointThreePanes]: {
             width: infoPaneWidth + postsPaneMaxWidth,
+            height: "100%",
             overflow: "hidden",
             ["&>div"]: {
               height: "100%",

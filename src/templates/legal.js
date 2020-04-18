@@ -8,8 +8,10 @@ import MdxContent from "../components/mdxContent"
 const LegalPage = ({ pageContext }) => (
   <div
     css={{
+      margin: "0 auto",
+      padding: "32px 32px 64px",
+      boxSizing: "border-box",
       maxWidth: 600,
-      margin: "32px auto",
     }}
   >
     <nav>

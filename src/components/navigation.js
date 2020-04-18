@@ -8,14 +8,13 @@ import { highlight } from "../colors"
 
 import me from "./me.png"
 
-export const infoPaneWidth = 332
-export const postsPaneSoftMinWidth = 396
+export const infoPaneWidth = 320
+export const postsPaneSoftMinWidth = 512
 export const postsPaneMaxWidth = 564
 
 const infoLinkCss = {
-  margin: "0 8px",
   textTransform: "uppercase",
-  fontSize: "0.6em",
+  fontSize: "0.8em",
   "&:hover": {
     color: highlight,
   },
@@ -89,7 +88,8 @@ const Navigation = (props) => {
         </p>
         <FlexList
           css={{
-            justifyContent: "space-evenly",
+            flexDirection: "column",
+            li: { margin: 4 },
           }}
         >
           <li>
@@ -114,8 +114,8 @@ const Navigation = (props) => {
         css={{
           flexGrow: 1,
           flexShrink: 1,
+          flexBasis: postsPaneSoftMinWidth,
           padding: 32,
-          minWidth: postsPaneSoftMinWidth,
           width: postsPaneMaxWidth,
           boxSizing: "border-box",
         }}
