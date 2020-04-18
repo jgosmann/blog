@@ -1,21 +1,18 @@
 import React from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faArrowAltCircleLeft } from "@fortawesome/free-solid-svg-icons"
+import { Link } from "gatsby"
 
 const BackLink = () => {
-  const onClick = (ev) => {
-    ev.preventDefault()
-    history.back()
-  }
   return (
-    <a href="#" onClick={onClick}>
+    <Link to="/">
       <FontAwesomeIcon
         icon={faArrowAltCircleLeft}
         fixedWidth
         css={{ color: "#000", marginRight: 4 }}
       />
       Go back to blog
-    </a>
+    </Link>
   )
 }
 
