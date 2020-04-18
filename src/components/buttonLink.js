@@ -89,7 +89,7 @@ const ButtonLink = ({ children, onClick, title }) => {
 
 ButtonLink.propTypes = {
   children: PropTypes.node,
-  onClick: PropTypes.function,
+  onClick: PropTypes.func,
   title: PropTypes.string,
 }
 

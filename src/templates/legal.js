@@ -29,7 +29,7 @@ const LegalPage = ({ pageContext }) => (
 )
 
 LegalPage.propTypes = {
-  pageContext: PropTypes.object.required,
+  pageContext: PropTypes.object.isRequired,
 }
 
 export default LegalPage

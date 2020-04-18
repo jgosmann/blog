@@ -11,7 +11,7 @@ const PostPage = ({ pageContext }) => (
 )
 
 PostPage.propTypes = {
-  pageContext: PropTypes.object.required,
+  pageContext: PropTypes.object.isRequired,
 }
 
 export default PostPage

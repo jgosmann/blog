@@ -21,7 +21,7 @@ const CopyButton = ({ getCopyText }) => {
 }
 
 CopyButton.propTypes = {
-  getCopyText: PropTypes.function,
+  getCopyText: PropTypes.func.isRequired,
 }
 
 export default CopyButton

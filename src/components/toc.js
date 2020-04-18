@@ -1,6 +1,5 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { Link } from "gatsby"
 
 const Toc = ({ items }) => (
   <ol>
@@ -13,17 +12,15 @@ const Toc = ({ items }) => (
   </ol>
 )
 
-const tocType = (props, propName, componentName) =>
-  PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      url: PropTypes.string,
-      items: tocType,
-    })
-  )(props, propName, componentName)
+const itemShape = {
+  title: PropTypes.string,
+  url: PropTypes.string,
+}
+const itemType = PropTypes.shape(itemShape)
+itemShape.items = PropTypes.arrayOf(itemType)
 
 Toc.propTypes = {
-  items: tocType,
+  items: PropTypes.arrayOf(itemType),
 }
 
 export default Toc

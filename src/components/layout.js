@@ -7,7 +7,7 @@ import "normalize.css"
 import SEO from "./seo"
 import LanguageContext from "./languageContext"
 import PostLayout from "./postLayout"
-import { highlight, highlightShade } from "../colors.js"
+import { highlight, highlightShade } from "../colors"
 
 const Layout = ({ children, pageContext, location }) => {
   return (
@@ -68,7 +68,7 @@ const Layout = ({ children, pageContext, location }) => {
           }
         />
         {pageContext.type == "posts" ? (
-          <PostLayout path={location.pathname}>{children}</PostLayout>
+          <PostLayout pathname={location.pathname}>{children}</PostLayout>
         ) : (
           <>{children}</>
         )}
@@ -78,9 +78,10 @@ const Layout = ({ children, pageContext, location }) => {
 }
 
 Layout.propTypes = {
-  children: PropTypes.node.required,
-  pageContext: PropTypes.object.required,
-  location: PropTypes.shape({ pathname: PropTypes.string.required }).required,
+  children: PropTypes.node.isRequired,
+  pageContext: PropTypes.object.isRequired,
+  location: PropTypes.shape({ pathname: PropTypes.string.isRequired })
+    .isRequired,
 }
 
 export default Layout

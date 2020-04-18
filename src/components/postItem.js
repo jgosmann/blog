@@ -71,11 +71,11 @@ const PostItem = ({ title, date, timeToRead, href, language }) => (
 )
 
 PostItem.propTypes = {
-  date: PropTypes.string.required,
-  href: PropTypes.string.required,
+  date: PropTypes.string.isRequired,
+  href: PropTypes.string.isRequired,
   language: PropTypes.oneOf(["de", "en"]),
-  timeToRead: PropTypes.number.required,
-  title: PropTypes.string.required,
+  timeToRead: PropTypes.number.isRequired,
+  title: PropTypes.string.isRequired,
 }
 
 export default PostItem

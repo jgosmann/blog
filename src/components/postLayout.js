@@ -16,12 +16,12 @@ import NavMenuButton, {
 const threePanesMinWidth = infoPaneWidth + postsPaneMaxWidth + mainWidth
 const breakpointThreePanes = `@media (min-width: ${threePanesMinWidth}px)`
 
-const PostLayout = ({ children, path }) => {
+const PostLayout = ({ children, pathname }) => {
   const [menuActive, setMenuActive] = useState(false)
-  const [lastPath, setLastPath] = useState(path)
+  const [lastPath, setLastPath] = useState(pathname)
   useEffect(() => {
-    if (lastPath !== path) {
-      setLastPath(path)
+    if (lastPath !== pathname) {
+      setLastPath(pathname)
       setMenuActive(false)
     }
   })
@@ -90,8 +90,8 @@ const PostLayout = ({ children, path }) => {
 }
 
 PostLayout.propTypes = {
-  children: PropTypes.node.required,
-  path: PropTypes.string.required,
+  children: PropTypes.node.isRequired,
+  pathname: PropTypes.string.isRequired,
 }
 
 export default PostLayout
