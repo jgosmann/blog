@@ -2,8 +2,6 @@ import React from "react"
 import PropTypes from "prop-types"
 import { navigate, withPrefix } from "gatsby"
 
-import "flag-icon-css/css/flag-icon.css"
-
 import FlagDe from "./flagDe"
 import FlagSplitEn from "./flagSplitEn"
 

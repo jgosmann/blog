@@ -1,5 +1,6 @@
 import React from "react"
-import "flag-icon-css/css/flag-icon.css"
+
+import "./flagIcons.scss"
 
 const FlagSplitEn = () => (
   <span

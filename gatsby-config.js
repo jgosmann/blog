@@ -8,6 +8,12 @@ module.exports = {
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
+    {
+      resolve: `gatsby-plugin-sass`,
+      options: {
+        includePaths: ["node_modules"],
+      },
+    },
     `gatsby-plugin-emotion`,
     {
       resolve: `gatsby-source-filesystem`,
