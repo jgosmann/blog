@@ -3,6 +3,7 @@ import PropTypes from "prop-types"
 import { Global, css } from "@emotion/core"
 
 import "normalize.css"
+import "@fortawesome/fontawesome-svg-core/styles.css"
 
 import SEO from "./seo"
 import LanguageContext from "./languageContext"
@@ -55,10 +56,6 @@ const Layout = ({ children, pageContext, location }) => {
             th {
               padding: 4px;
               border-color: #444;
-            }
-
-            [data-prefix="fas"] {
-              height: 1em;
             }
           `}
         />
