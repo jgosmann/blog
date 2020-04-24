@@ -6,7 +6,12 @@ import FlexList from "./flexList"
 import PostItem from "./postItem.js"
 import { highlight } from "../colors"
 
-import me from "./me.png"
+import me704webp from "./me-704w.webp"
+import me704png from "./me-704w.png"
+import me400webp from "./me-400w.webp"
+import me400png from "./me-400w.png"
+import me200webp from "./me-200w.webp"
+import me200png from "./me-200w.png"
 
 export const infoPaneWidth = 320
 export const postsPaneSoftMinWidth = 512
@@ -75,13 +80,24 @@ const Navigation = (props) => {
           textAlign: "center",
         }}
       >
-        <img
-          alt="me"
-          src={me}
-          width="200"
-          height="200"
-          css={{ margin: "0 auto", userSelect: "none" }}
-        />
+        <picture
+          css={{
+            margin: "0 auto",
+            userSelect: "none",
+            width: 200,
+            height: 200,
+          }}
+        >
+          <source
+            type="image/webp"
+            srcSet={`${me200webp}, ${me400webp} 2x, ${me704webp} 3x`}
+          />
+          <source
+            type="image/png"
+            srcSet={`${me200png}, ${me400png} 2x, ${me704png} 3x`}
+          />
+          <img alt="me" src={me200png} />
+        </picture>
         <p css={{ margin: "32px 0", fontStyle: "italic" }}>
           This page mostly serves as an archive of some of my older blog posts
           by me. I am rarely adding new posts these days.
