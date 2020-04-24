@@ -114,6 +114,11 @@ const Navigation = (props) => {
             </a>
           </li>
           <li>
+            <Link css={infoLinkCss} to="/rss.xml">
+              RSS feed
+            </Link>
+          </li>
+          <li>
             <Link css={infoLinkCss} to="/legal/privacy">
               Privacy policy
             </Link>
