@@ -63,6 +63,7 @@ const Layout = ({ children, pageContext, location }) => {
           title={
             (pageContext.node && pageContext.node.frontmatter.title) || "Home"
           }
+          lang={pageContext.lang}
         />
         {pageContext.type == "posts" ? (
           <PostLayout pathname={location.pathname}>{children}</PostLayout>
