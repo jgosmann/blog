@@ -46,7 +46,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
     } else if (node.parent.sourceInstanceName == "legal") {
       name = name.replace(/\.(..)$/, "/$1")
     }
-    const path = `/${node.parent.sourceInstanceName}/${name}`
+    const path = `/${node.parent.sourceInstanceName}/${name}/`
     createPage({
       path,
       component:
