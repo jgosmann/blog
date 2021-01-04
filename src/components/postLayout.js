@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import PropTypes from "prop-types"
-import { Global, css } from "@emotion/core"
+import { Global, css } from '@emotion/react'
 
 import "normalize.css"
 

@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "author": "Kyle Mathews <mathews.kyle@gmail.com>",
   "dependencies": {
-    "@emotion/core": "^10.1.1",
+    "@emotion/react": "^11.0.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/react-fontawesome": "^0.1.14",
@@ -14,7 +14,7 @@
     "flag-icon-css": "^3.5.0",
     "gatsby": "^2.29.3",
     "gatsby-image": "^2.8.0",
-    "gatsby-plugin-emotion": "^4.5.0",
+    "gatsby-plugin-emotion": "^5.1.0",
     "gatsby-plugin-feed": "^2.10.0",
     "gatsby-plugin-manifest": "^2.9.1",
     "gatsby-plugin-mdx": "^1.7.1",
@@ -36,6 +36,7 @@
     "remark-slug": "^6.0.0"
   },
   "devDependencies": {
+    "@emotion/eslint-plugin": "^11.0.0",
     "eslint": "^7.17.0",
     "eslint-plugin-react": "^7.22.0",
     "prettier": "^2.2.1"
