@@ -33,6 +33,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-mdx`,
       options: {
+        lessBabel: true,
         remarkPlugins: [remarkSlug],
         gatsbyRemarkPlugins: [
           {
