@@ -12,7 +12,9 @@ module.exports = {
     {
       resolve: `gatsby-plugin-sass`,
       options: {
-        includePaths: ["node_modules"],
+        sassOptions: {
+          includePaths: ["node_modules"],
+        },
       },
     },
     `gatsby-plugin-emotion`,
