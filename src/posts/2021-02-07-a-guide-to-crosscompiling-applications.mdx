@@ -1,0 +1,506 @@
+---
+date: "2021-02-07"
+title: "A guide to cross-compiling applications"
+---
+
+<Toc />
+
+I recently set up a cross-compilation toolchain to compile applications on my
+MacBook and run them on a Raspberry Pi. It took me quite a while to figure out
+how all the pieces fit together as all the information on the web seems to be
+slightly outdated, intended for slightly different use cases, and sometimes just
+conflicting. One main gotcha is that there are two major use cases for
+cross-compiling:
+
+1. Building a (Linux) kernel on one CPU architecture to use it on another.
+2. Building an application that runs on an already installed OS (such as Linux),
+   but on a different CPU architecture than your build host.
+
+Guides for one use-case will not necessarily work for the other use-case (and
+not all guides establish clearly what use case they are intended for). Here,
+I will discuss the _second_ use case.
+
+Furthermore, I am doing this on a MacBook under macOS. A couple of steps (mostly
+preparation and installation of dependencies) will be specific to this system.
+If you are using some other OS, you will hopefully be able to figure out the
+corresponding steps on your own.
+
+While my goal is to be able to cross-compile Rust programs, this requires
+a fully functional C toolchain. This means this guide applies also if you just
+want to compile C programs – just skip the Rust specific steps at the end.
+
+If you want to cross-compile for a different target architecture than the
+Raspberry Pi's ARM processor, some detail adjustments along the way might be
+necessary. You're on your own there.
+
+A final word of caution: I am no expert on cross-compilation. This article
+represents what worked for me and tries to summarize my learnings, but I can
+not guarantee that everything is absolutely correct.
+
+# Terms
+
+Before we start, it will be helpful to clarify a few terms:
+
+- **Architecture** is with regards to a CPU. Programs built for one architecture
+  usually do not run on another architecture.
+- The **host** is the system you are compiling your code on. In my case this is
+  macOS on an x86_64 CPU.
+- The **target** is the type of system you are compiling for. It is constituted
+  out of the target CPU architecture, the target OS, and the [application binary
+  interface](https://en.wikipedia.org/wiki/Application_binary_interface).
+  (Technically, the vendor is also part of it, but for Linux targets irrelevant
+  and set to “unknown”.)
+- The **sys-root** is a directory on the host that partially replicates the
+  file system hierarchy of the target system, containing important header files
+  and libraries compiled for the target system.
+
+# Overview
+
+The general process of building a cross-compiler looks like this:
+
+1. Build a version of GNU Binutils that runs on your host but can process
+   executables for the target system.
+2. Using these Binutils, we build a stripped-down GCC compiler that only allows
+   for static linking, but again runs on the host while producing output for
+   the target architecture.
+3. With this GCC compiler, build some minimal bootstrapping files from the C
+   standard library for the target system.
+4. With those files we can build libgcc (from GCC) for cross-compiling.
+5. With this GCC compiler and libgcc, the C standard library libc for the target
+   system can be built.
+6. Finally, with the libc for the target system, we are now able to build a
+   full GCC compiler that runs on the host, but produces executable for the
+   target system and is able to (dynamically) link against the target system's
+   libraries such as libc.
+
+# Preperation
+
+## Dependencies for building GCC
+
+To be able to build a GCC on your host system the following libraries need to
+be available:
+
+- [gettext](https://www.gnu.org/software/gettext/)
+- [gmp](https://gmplib.org/)
+- [libiconv](https://www.gnu.org/software/libiconv/)
+- [mpc](http://www.multiprecision.org/mpc/)
+- [mpfr](https://www.mpfr.org/)
+- [zlib](https://zlib.net/)
+- [zstd](https://github.com/facebook/zstd)
+
+I used [MacPorts](https://www.macports.org/) to install them with:
+
+```bash
+sudo port install gettext gpm libiconv libmpc mpfr zlib zstd
+```
+
+Alternatively, you could also use [Homebrew](https://brew.sh/) or install them
+from the sources yourself.
+
+(Note: Only gmp, mpc, and mpfg are absolutely essential. You should be able to
+build everything without the remaining dependencies if you provide the right
+`--disable-...` flags to the configure scripts.)
+
+## Working host C compiler
+
+I'm also assuming that you have a working host C compiler installed.
+If you are using MacPorts, this is likely the case as MacPorts has the same
+requirement. If not, it should suffice to install XCode with the command line
+developer tools. XCode can be installed via the AppStore, and the command line
+tools with:
+
+```bash
+xcode-select --install
+```
+
+Also, make sure to accept the XCode license:
+
+```bash
+sudo xcodebuild -license
+```
+
+## Provide case-sensitive file system
+
+The macOS file systems are case-insensitive by default, but glibc can only be
+built on case-sensitive file systems. Thus, we create a disk image with a
+case-sensitive file system to perform all the work on:
+
+```bash
+hdiutil create -size 8g -fs "Case-sensitive APFS" -type SPARSE -volname xcompile xcompile.sparseimage
+open xcompile.dmg
+cd /Volumes/xcompile
+```
+
+The maximum size of 8GB is about twice as much as actually needed, but a sparse
+image only occupies as much space as actually needed.
+
+## Bring GNU tools into search path
+
+We will also need the GNU versions of awk, libtool, make, and sed instead of the
+BSD versions (or outdated GNU versions) shipped with macOS/XCode. I also
+installed these with MacPorts (but feel free to use Homebrew or the sources
+instead):
+
+```bash
+sudo port install gawk libtool gmake gsed
+```
+
+Then we have to put these in front of the search path, so that they are found
+instead of the BSD tools. I just did that by running the following command
+in my build terminal session, but you can also add it to your shell's startup file
+if you desire to make the change permanent:
+
+```bash
+export PATH="/opt/local/libexec/gnubin:$PATH"
+```
+
+Unfortunately, the build scripts will prefer `gnumake` over `gmake`, and
+MacPorts only installs `gmake` while XCode provides a too outdated `gnumake`. So let
+us fix that:
+
+```bash
+mkdir /Volumes/xcompile/bin
+ln -s /opt/local/bin/gmake /Volume/xcompile/bin/gnumake
+export PATH="/Volumes/xcompile/bin:$PATH"
+```
+
+## Download required software
+
+Download the software packages that we are going to build:
+
+- [Binutils](https://www.gnu.org/software/binutils/) (2.35)
+- [gcc](https://gcc.gnu.org/) (10.2.0)
+- [glibc](https://www.gnu.org/software/libc/) (2.28)
+- [Linux kernel](https://www.kernel.org/) (5.4.83)
+
+I provided the version numbers that I used. Other versions might work too, but
+keep in mind that not all combinations of gcc and glibc are compatible. Also,
+you want to use the glibc and Linux kernel versions of your target system. To
+figure out the correct versions, run the following on the target system:
+
+```bash
+ldd --version  # prints the glibc version
+uname -r       # prints the kernel version
+```
+
+### Verify signatures of downloaded software
+
+Note that it is best practice to also download the provided signature file for
+each package. First import the GPG keys:
+
+```bash
+wget https://ftp.gnu.org/gnu/gnu-keyring.gpg
+gpg --import gnu-keyring.gpg
+gpg --locate-keys torvalds@kernel.org gregkh@kernel.org
+```
+
+Then you can verify the package signatures with:
+
+```bash
+gpg --verify <package.tar.xz.sig>
+```
+
+It should state that the signature is “good”. You might however get warnings
+that certain keys are expired (because some of the releases are a while back)
+and that the keys are not certified with a trusted signature (because we've
+just downloaded the key from the Internet and we cannot tell whether it actually
+belongs to the person/organization it claims to belong to). Explaining how to
+increase the level of trust is out of the scope of this article. But at least,
+under the assumption that no attacker modified this initial download of the
+keys, you can use the same set of keys in the future to verify other Linux/GNU
+releases.
+
+### Unpack downloaded software
+
+Unpack the downloaded software packages to `/Volumes/xcompile`.
+
+## Configure environment
+
+By default macOS' open file limit is too low, increase it to 1024 (for the
+current session):
+
+```bash
+ulimit -n 1024
+```
+
+The define a few variables for the upcoming build:
+
+```bash
+# Install location of the cross-compiler and its files
+export PREFIX=/Volumes/xcompile/install
+# CPU architecture of the target (armv6 is for Raspberry Pi 3+)
+export ARCH=armv6
+# The target triple (for Raspberry Pi 3+ it is an ARM processor, running Linux,
+# using the gnueabihf application binary interface with the hf standing for
+# hardware floating point operations)
+export TARGET=arm-linux-gnueabihf
+```
+
+# Building the cross-compiler and glibc
+
+We will do all of the following on the case-sensitive file system:
+
+```bash
+cd /Volumes/xcompile
+```
+
+Note that in the following you will see occasional `make -j4` commands. The
+`-j4` parallelizes the execution for four processor cores. If your CPU
+has fewer cores, reduce the number accordingly. If your CPU has more cores,
+you may want to increase it up to the number of cores. **Note that the
+parallelization can sometimes cause problems (race conditions) in the build
+process. If you encounter an error during any of these `make -j4` steps, try
+whether the problem resolves itself by running `make` without the
+parallelization instead.**
+
+## Building and installing Binutils
+
+```bash
+mkdir build-binutils && cd build-binutils
+../binutils-2.35/configure \
+    --prefix=$PREFIX \
+    --with-sysroot=$PREFIX/$TARGET/sys-root \
+    --target=$TARGET \
+    --with-arch=$ARCH \
+    --with-fpu=vfp \
+    --with-float=hard \
+    --disable-multilib \
+    --disable-libquadmath \
+    --disable-libquadmath-support
+make -j4
+make install
+```
+
+The meaning of the arguments to `configure`:
+
+- `--prefix` gives the Binutils install location on the host.
+- `--with-sysroot` gives the sys-root on the host, containing header and
+  libraries compiled for the target system.
+- `--target` gives the target system.
+- `--with-arch` gives the CPU architecture of the target system.
+- `--with-fpu=vfp` declares to use the “vector floating point” unit of the ARM
+  processor to get hardware floating point operations.
+- `--with-float` declares to use a hardware floating point unit.
+- `--disable-multilib` deactivates multilib which allows to run programs for
+  two (related) architectures on a single system. This is not useful for the
+  Raspberry Pi as we do not have a multilib environment there.
+- `--disable-libquadmath` and `--disable-libquadmath-support` to deactivate
+  the quadmath libraries which did not compile for me. They are also disabled
+  for the gcc provided by Raspberry Pi OS. I suppose the Raspberry
+  Pi's ARM processor does not support quadruple precision floating point math
+  operations that are implemented with these libraries.
+
+## Putting the Linux kernel headers into place
+
+Next we bring the target system's Linux kernel header into place (in the
+sys-root) to be able to compile gcc and glibc.
+
+```bash
+cd ../linux-5.4.83
+KERNEL=kernel7
+# The kernel just uses 'arm', not 'armv6' to denote the CPU architecture
+make ARCH=arm INSTALL_HDR_PATH=$PREFIX/$TARGET/sys-root/usr headers_install
+```
+
+## Building and installing a minimal gcc for static linking
+
+```bash
+mkdir ../build-gcc && cd ../build-gcc
+../gcc-10.2.0/configure \
+    --prefix=$PREFIX \
+    --with-sysroot=$PREFIX/$TARGET/sys-root \
+    --target=$TARGET \
+    --with-arch=$ARCH \
+    --with-fpu=vfp \
+    --with-float=hard \
+    --disable-multilib \
+    --disable-libquadmath \
+    --disable-libquadmath-support \
+    --disable-libitm \
+    --disable-libsanitizer
+    --with-gmp=/opt/local \
+    --with-zstd=/opt/local \
+    --with-zlib=/opt/local \
+    --with-libiconv-prefix=/opt/local \
+    --with-libintl-prefix=/opt/local \
+    --enable-languages=c,c++,fortran
+make -j4 all-gcc
+make install-gcc
+```
+
+The first set of arguments to `configure` is the same as for Binutils, the
+remaining ones are:
+
+- `--disable-libitm` has also been used for the gcc provided by Raspberry Pi OS.
+- `--disable-libsanitizer` deactivates the libsanitizer library that did not
+  compile for me. I think it does not support ARM architectures.
+- `--with-gmp`, `--with-zstd`, `--with-zlib`, `--with-libiconv-prefix`,
+  `--with-libintl-prefix` ensure that the corresponding libraries are found. If
+  you did not use MacPorts to install them, adjust the paths accordingly.
+- `--enable-languages` determines for which languages a GCC compile will be
+  built. The C compiler should suffice, but I thought while I am at it, I might
+  as well built the C++ and Fortran compilers in case I'll need them in the
+  future.
+
+## Install glibc headers and bootstrap libraries
+
+```bash
+mkdir ../build-glibc && cd ../build-glibc
+CC=$PREFIX/bin/$TARGET-gcc \
+    LD=$PREFIX/bin/$TARGET-ld \
+    AR=$PREFIX/bin/$TARGET-ar \
+    RANLIB=$PREFIX/bin/$TARGET-ranlib \
+    ../glibc-2.28/configure \
+    --prefix=/usr \
+    --build=$MACHTYPE \
+    --host=$TARGET \
+    --target=$TARGET \
+    --with-arch=$ARCH \
+    --with-headers=$PREFIX/$TARGET/sys-root/usr/include \
+    --with-fpu=vfp \
+    --with-float=hard \
+    --disable-multilib \
+    --disable-lipquadmath \
+    --disable-libquadmath-support \
+    --disable-libitm \
+    --with-gmp=/opt/local \
+    --with-zstd=/opt/local \
+    --with-zlib=/opt/local \
+    --with-libiconv-prefix=/opt/local \
+    --disable-werror
+    libc_cv_forced_unwind=yes
+```
+
+Because we need to build glibc for the target platform, we need to ensure that
+the correct compiler, linker, etc. are used that produce output for the target
+platform. This is done by pointing the `CC`, `LD`, `AR`, and `RANLIB` variables
+to the cross-compilation toolchain we have installed so far.
+
+Most arguments are the same as for the GCC configure invocation, but in some
+places are small, but important differences:
+
+- `--prefix` needs to be the prefix in the sys-root (which corresponds to the
+  prefix in the target system).
+- `--build` argument defines the CPU architecture of the host on which we built
+  the library, while the `--host` argument now (confusingly) refers to the
+  target system (the “host” on which the library is “used”).
+- `--with-headers` provides the directory with the target system's header files
+  which is in our sys-root.
+- `--disable-werror` was required because the code would otherwise not compile
+  due to compiler warnings treated as error. (Likely the specific warning was
+  not issued with older GCC versions in use when that glibc version was first
+  released.)
+- `libc_cv_forced_unwind=yes` declares that force-unwind support is available
+  without running the configure test for it. That test would fail as it requires
+  glibc already installed (otherwise the linker cannot link the test program).
+
+Next, we install the bootstrap headers into the sys-root:
+
+```bash
+make \
+    install-bootstrap-headers=yes \
+    install_root=$PREFIX/$TARGET/sys-root \
+    install-headers
+```
+
+We also need the “C start-up” part of the glibc to be able to link compiled C
+code into working programs:
+
+```
+make -j4 csu/subdir_lib
+mkdir $PREFIX/$TARGET/sys-root/usr/lib
+install csu/crt1.o csu/crti.o csu/crtn.o $PREFIX/$TARGET/sys-root/usr/lib
+```
+
+And finally we put some initial libc files into place. The gcc invocation
+disables linking to the (not yet existing) stdlib and startfiles to build an
+empty libc by treating /dev/null as C source input (`-x c`).
+
+```bash
+$PREFIX/bin/$TARGET-gcc \
+    -nostdlib \
+    -nostartfiles \
+    -shared \
+    -x c /dev/null \
+    -o $PREFIX/$TARGET/sys-root/usr/lib/libc.so
+touch $PREFIX/$TARGET/sys-root/usr/include/gnu/stubs.h
+```
+
+## Build and install libgcc
+
+```bash
+cd ../build-gcc
+make -j4 all-target-libgcc
+make install-target-libgcc
+```
+
+## Build and install glibc for the target system
+
+Here we have to ensure again to install into the sys-root because it is the
+glibc for the target system:
+
+```bash
+cd ../build-glibc
+make -j4
+make install_root=$PREFIX/$TARGET/sys-root install
+```
+
+## Build and install the rest of GCC
+
+```bash
+cd ../build-gcc
+make -j4
+make install
+```
+
+Now you should have `/Volumes/xcompile/install/bin/arm-linux-gnueabihf-gcc`
+which is a GCC compiler that runs on your host and produces executables for the
+target platform.
+
+# Setup Rust for cross-compiling
+
+Believe it or not, but this is the easy part. First we need to install the
+Rust/Clang toolchain for the target:
+
+```bash
+rustup target add arm-unknown-linux-gnueabihf
+```
+
+This single command would be sufficient to install all we need for
+cross-compilation, if it weren't for the target glibc and linker that we need.
+But because of those two pieces one has to go through all the hassle above.
+
+Once the toolchain is installed, you can setup your Rust project for
+cross-compiling. Because you cannot run the cross-compiled binaries on your host
+machine, I recommend to create a `run-on-target.sh` script:
+
+```bash
+#!/bin/bash
+
+set -o errexit -o nounset -o pipefail
+
+TARGET_HOSTNAME=raspberrypi  # CHANGE THIS to match your setup
+path="$1"
+shift 1
+
+rsync "$path" $TARGET_HOSTNAME:/tmp
+FILENAME=`basename "$path"`
+ssh $TARGET_HOSTNAME -tt -C "/tmp/$FILENAME $@"
+```
+
+The put the following into a `.cargo/config` file relative to your Rust projects
+root to specify the correct linker and target architecture:
+
+```toml
+[build]
+target = "arm-unknown-linux-gnueabihf"
+
+[target.arm-unknown-linux-gnueabihf]
+linker = "/Volumes/xcompile/install/bin/arm-linux-gnueabihf-gcc"
+runner = "/path/to/run-on-target.sh"  # CHANGE THIS
+```
+
+With this `cargo build` will cross-compile for the target architecture.
+`cargo run` and `cargo test` will use the provided runner script to copy the
+binary to the target system via SSH and execute it there giving a very smooth
+development experience.
