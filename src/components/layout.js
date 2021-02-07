@@ -1,6 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { Global, css } from '@emotion/react'
+import { Global, css } from "@emotion/react"
 
 import "normalize.css"
 import "@fortawesome/fontawesome-svg-core/styles.css"
@@ -46,6 +46,16 @@ const Layout = ({ children, pageContext, location }) => {
             pre {
               border-radius: 4px;
               box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+            }
+
+            pre[class*="language-"] {
+              padding: 0.875em;
+            }
+
+            pre[class*="language-"],
+            code[class*="language-"] {
+              font-size: 0.875em;
+              line-height: 1.3em;
             }
 
             table {
