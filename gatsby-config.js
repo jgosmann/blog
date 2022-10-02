@@ -1,4 +1,4 @@
-const remarkSlug = require("remark-slug")
+const rehypeSlug = require("rehype-slug")
 
 module.exports = {
   siteMetadata: {
@@ -36,7 +36,7 @@ module.exports = {
       resolve: `gatsby-plugin-mdx`,
       options: {
         mdxOptions: {
-          remarkPlugins: [remarkSlug],
+          rehypePlugins: [rehypeSlug],
         },
         gatsbyRemarkPlugins: [
           {
