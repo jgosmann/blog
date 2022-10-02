@@ -49,13 +49,20 @@ const Layout = ({ children, pageContext, location }) => {
             }
 
             pre[class*="language-"] {
-              padding: 0.875em;
+              padding: 0.675em;
             }
 
             pre[class*="language-"],
-            code[class*="language-"] {
+            code {
               font-size: 0.875em;
               line-height: 1.3em;
+              background: #f5f2f0;
+            }
+            code {
+              padding: 0 2px;
+            }
+            pre[class*="language-"] code {
+              padding: 0;
             }
 
             table {

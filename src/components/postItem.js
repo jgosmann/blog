@@ -16,7 +16,7 @@ const metaCss = {
   marginRight: 16,
 }
 
-const PostItem = ({ title, date, timeToRead, href, language }) => (
+const PostItem = ({ title, date, fields: { timeToRead }, href, language }) => (
   <Link
     to={href}
     css={{
@@ -64,7 +64,7 @@ const PostItem = ({ title, date, timeToRead, href, language }) => (
       </li>
       <li css={metaCss} title="Estimated time to read">
         <FontAwesomeIcon icon={faHourglassHalf} />
-        &nbsp;{timeToRead}&nbsp;minute read
+        &nbsp;{Math.round(timeToRead.minutes)}&nbsp;minute read
       </li>
     </FlexList>
   </Link>
@@ -74,7 +74,11 @@ PostItem.propTypes = {
   date: PropTypes.string.isRequired,
   href: PropTypes.string.isRequired,
   language: PropTypes.oneOf(["de", "en"]),
-  timeToRead: PropTypes.number.isRequired,
+  fields: {
+    timeToRead: {
+      minutes: PropTypes.number.isRequired,
+    },
+  },
   title: PropTypes.string.isRequired,
 }
 

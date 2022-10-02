@@ -6,6 +6,7 @@
 
 // You can delete this file if you're not using it
 const path = require("path")
+const readingTime = require("reading-time")
 
 exports.createPages = async ({ actions, graphql, reporter }) => {
   const { createPage } = actions
@@ -29,6 +30,9 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
             }
           }
           tableOfContents
+          internal {
+            contentFilePath
+          }
         }
       }
     }
@@ -47,12 +51,13 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
       name = name.replace(/\.(..)$/, "/$1")
     }
     const path = `/${node.parent.sourceInstanceName}/${name}/`
+    const component =
+      node.parent.sourceInstanceName == "legal"
+        ? legalTemplate
+        : defaultTemplate
     createPage({
       path,
-      component:
-        node.parent.sourceInstanceName == "legal"
-          ? legalTemplate
-          : defaultTemplate,
+      component: `${component}?__contentFilePath=${node.internal.contentFilePath}`,
       context: {
         type: node.parent.sourceInstanceName,
         node,
@@ -61,4 +66,15 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
       },
     })
   })
+}
+
+exports.onCreateNode = ({ node, actions }) => {
+  const { createNodeField } = actions
+  if (node.internal.type == `Mdx`) {
+    createNodeField({
+      node,
+      name: `timeToRead`,
+      value: readingTime(node.body),
+    })
+  }
 }

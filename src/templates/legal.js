@@ -5,7 +5,7 @@ import BackLink from "../components/backLink"
 import LanguageSwitcher from "../components/languageSwitcher"
 import MdxContent from "../components/mdxContent"
 
-const LegalPage = ({ pageContext }) => (
+const LegalPage = ({ pageContext, children }) => (
   <div
     css={{
       margin: "0 auto",
@@ -25,13 +25,14 @@ const LegalPage = ({ pageContext }) => (
       </ul>
     </nav>
     <main>
-      <MdxContent node={pageContext.node} />
+      <MdxContent node={pageContext.node}>{children}</MdxContent>
     </main>
   </div>
 )
 
 LegalPage.propTypes = {
   pageContext: PropTypes.object.isRequired,
+  children: PropTypes.children,
 }
 
 export default LegalPage

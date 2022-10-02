@@ -29,7 +29,11 @@ const postsQuery = graphql`
   query {
     allMdx(sort: { fields: frontmatter___date, order: DESC }) {
       nodes {
-        timeToRead
+        fields {
+          timeToRead {
+            minutes
+          }
+        }
         parent {
           ... on File {
             name

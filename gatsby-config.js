@@ -35,8 +35,9 @@ module.exports = {
     {
       resolve: `gatsby-plugin-mdx`,
       options: {
-        lessBabel: true,
-        remarkPlugins: [remarkSlug],
+        mdxOptions: {
+          remarkPlugins: [remarkSlug],
+        },
         gatsbyRemarkPlugins: [
           {
             resolve: `gatsby-remark-images`,
@@ -46,7 +47,7 @@ module.exports = {
           },
           {
             resolve: `gatsby-remark-prismjs`,
-            options: {},
+            options: { noInlineHighlight: true },
           },
         ],
       },
@@ -72,14 +73,14 @@ module.exports = {
           {
             output: "/rss.xml",
             title: "Jan's blog",
-            serialize: ({ query: { site, allMdx } }) => {
-              return allMdx.nodes.map((node) => {
+            serialize: ({ query: { site, allFile } }) => {
+              return allFile.nodes.map((node) => {
                 const url =
                   site.siteMetadata.siteUrl +
                   "/posts/" +
-                  node.parent.name.replace(/(\d+)-(\d+)-(\d+)-/, "$1/$2/$3/")
-                return Object.assign({}, node.frontmatter, {
-                  description: node.excerpt,
+                  node.name.replace(/(\d+)-(\d+)-(\d+)-/, "$1/$2/$3/")
+                return Object.assign({}, node.childMdx.frontmatter, {
+                  description: node.childMdx.excerpt,
                   url,
                   guid: url,
                 })
@@ -87,21 +88,19 @@ module.exports = {
             },
             query: `
               {
-                allMdx(sort: {
-                  fields: frontmatter___date, order: DESC},
-                  filter: {fileAbsolutePath: {regex: "/posts\\\\/[-a-zA-Z0-9]+.mdx$/"}
+                allFile(sort: {
+                  fields: childMdx___frontmatter___date, order: DESC},
+                  filter: {absolutePath: {regex: "/posts\\\\/[-a-zA-Z0-9]+.mdx$/"}
                 }) {
                   nodes {
-                    frontmatter {
-                      title
-                      date
-                      language
-                    }
-                    excerpt
-                    parent {
-                      ...on File {
-                        name
+                    name
+                    childMdx {
+                      frontmatter {
+                        title
+                        date
+                        language
                       }
+                      excerpt
                     }
                   }
                 }

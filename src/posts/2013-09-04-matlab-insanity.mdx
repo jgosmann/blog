@@ -32,8 +32,6 @@ following code:
 rand(rngStreams{obj.rngId}, 2, 1)
 ```
 
-<!--more-->
-
 It is supposed to produce two random numbers generated from a random number
 generation stream which has been initialized with a specific seed (to always get
 the same sequence). However, when debugging this code I realized that the
@@ -69,4 +67,3 @@ prevented without loss if MATLAB was stricter on the number of arguments passed
 to a function and types (i.e. returning an empty cell array instead of nothing).
 
 Unfortunately it is not. So, use Python or R or whatever. But no MATLAB!
-
