@@ -18,7 +18,11 @@ const LanguageSwitcher = ({ path }) => {
     navigate(targetPath, { replace: true })
   }
   return (
-    <a href={withPrefix(targetPath)} onClick={onClick}>
+    <a
+      href={withPrefix(targetPath)}
+      onClick={onClick}
+      lang={lang === "en" ? "de" : "en"}
+    >
       {lang == "en" ? (
         <>
           <FlagDe />

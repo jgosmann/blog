@@ -5,7 +5,7 @@ import BackLink from "./backLink"
 import LanguageSwitcher from "./languageSwitcher"
 import MdxContent from "./mdxContent"
 
-const LegalLayout = ({ pagePath, node, children }) => (
+const LegalLayout = ({ pagePath, node, children, language }) => (
   <div
     css={{
       margin: "0 auto",
@@ -24,7 +24,7 @@ const LegalLayout = ({ pagePath, node, children }) => (
         </li>
       </ul>
     </nav>
-    <main>
+    <main lang={language}>
       <MdxContent node={node}>{children}</MdxContent>
     </main>
   </div>
@@ -34,6 +34,7 @@ LegalLayout.propTypes = {
   pagePath: PropTypes.string.isRequired,
   node: PropTypes.object.isRequired,
   children: PropTypes.children,
+  language: PropTypes.string,
 }
 
 export default LegalLayout

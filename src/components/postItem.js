@@ -49,6 +49,7 @@ const PostItem = ({ title, date, fields: { timeToRead }, href, language }) => (
         fontSize: "1.8em",
         marginBottom: "0.2em",
       }}
+      lang={language}
     >
       {title}
     </div>

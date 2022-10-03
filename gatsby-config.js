@@ -8,7 +8,6 @@ module.exports = {
     siteUrl: `https://blog.jgosmann.de/`,
   },
   plugins: [
-    `gatsby-plugin-react-helmet`,
     {
       resolve: `gatsby-plugin-sass`,
       options: {

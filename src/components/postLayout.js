@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import PropTypes from "prop-types"
-import { Global, css } from '@emotion/react'
+import { Global, css } from "@emotion/react"
 
 import "normalize.css"
 
@@ -18,7 +18,7 @@ const threePanesMinWidth = infoPaneWidth + postsPaneMaxWidth + mainWidth
 const breakpointTwoPanes = `@media (min-width: ${twoPanesMinWidth}px)`
 const breakpointThreePanes = `@media (min-width: ${threePanesMinWidth}px)`
 
-const PostLayout = ({ children, pathname }) => {
+const PostLayout = ({ children, pathname, language }) => {
   const [menuActive, setMenuActive] = useState(false)
   const [lastPath, setLastPath] = useState(pathname)
   useEffect(() => {
@@ -54,6 +54,7 @@ const PostLayout = ({ children, pathname }) => {
             marginLeft: infoPaneWidth + postsPaneMaxWidth,
           },
         }}
+        lang={language}
       >
         {children}
       </div>
@@ -101,6 +102,7 @@ const PostLayout = ({ children, pathname }) => {
 PostLayout.propTypes = {
   children: PropTypes.node.isRequired,
   pathname: PropTypes.string.isRequired,
+  language: PropTypes.string,
 }
 
 export default PostLayout

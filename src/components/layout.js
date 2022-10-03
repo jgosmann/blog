@@ -5,7 +5,6 @@ import { Global, css } from "@emotion/react"
 import "normalize.css"
 import "@fortawesome/fontawesome-svg-core/styles.css"
 
-import SEO from "./seo"
 import LanguageContext from "./languageContext"
 import PostLayout from "./postLayout"
 import { highlight, highlightShade } from "../colors"
@@ -76,14 +75,10 @@ const Layout = ({ children, pageContext, location }) => {
             }
           `}
         />
-        <SEO
-          title={
-            (pageContext.node && pageContext.node.frontmatter.title) || "Home"
-          }
-          lang={pageContext.lang}
-        />
         {pageContext.type == "posts" ? (
-          <PostLayout pathname={location.pathname}>{children}</PostLayout>
+          <PostLayout pathname={location.pathname} language={pageContext.lang}>
+            {children}
+          </PostLayout>
         ) : (
           <>{children}</>
         )}
