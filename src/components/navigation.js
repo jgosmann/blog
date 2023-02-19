@@ -25,30 +25,28 @@ const infoLinkCss = {
   },
 }
 
-const postsQuery = graphql`
-  query {
-    allMdx(sort: { fields: frontmatter___date, order: DESC }) {
-      nodes {
-        fields {
-          timeToRead {
-            minutes
-          }
+const postsQuery = graphql`{
+  allMdx(sort: {frontmatter: {date: DESC}}) {
+    nodes {
+      fields {
+        timeToRead {
+          minutes
         }
-        parent {
-          ... on File {
-            name
-            sourceInstanceName
-          }
+      }
+      parent {
+        ... on File {
+          name
+          sourceInstanceName
         }
-        frontmatter {
-          title
-          date(formatString: "MMMM D, Y")
-          language
-        }
+      }
+      frontmatter {
+        title
+        date(formatString: "MMMM D, Y")
+        language
       }
     }
   }
-`
+}`
 
 const Navigation = (props) => {
   useEffect(() => {
@@ -173,7 +171,7 @@ const Navigation = (props) => {
         </FlexList>
       </div>
     </nav>
-  )
+  );
 }
 
 Navigation.propTypes = {}
