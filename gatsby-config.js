@@ -83,28 +83,26 @@ module.exports = {
                   url,
                   guid: url,
                 })
-              })
+              });
             },
-            query: `
-              {
-                allFile(sort: {
-                  fields: childMdx___frontmatter___date, order: DESC},
-                  filter: {absolutePath: {regex: "/posts\\\\/[-a-zA-Z0-9]+.mdx$/"}
-                }) {
-                  nodes {
-                    name
-                    childMdx {
-                      frontmatter {
-                        title
-                        date
-                        language
-                      }
-                      excerpt
-                    }
-                  }
-                }
-              }
-            `,
+            query: `{
+  allFile(
+    sort: {childMdx: {frontmatter: {date: DESC}}}
+    filter: {absolutePath: {regex: "/posts\\\\/[-a-zA-Z0-9]+.mdx$/"}}
+  ) {
+    nodes {
+      name
+      childMdx {
+        frontmatter {
+          title
+          date
+          language
+        }
+        excerpt
+      }
+    }
+  }
+}`,
           },
         ],
       },
