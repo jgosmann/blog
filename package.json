@@ -39,7 +39,7 @@
     "@emotion/eslint-plugin": "^11.2.0",
     "eslint": "^8.24.0",
     "eslint-plugin-react": "^7.24.0",
-    "prettier": "^2.3.2",
+    "prettier": "^3.0.0",
     "sass": "^1.36.0"
   },
   "keywords": [

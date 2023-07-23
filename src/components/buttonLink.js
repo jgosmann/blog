@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import PropTypes from "prop-types"
-import { keyframes } from '@emotion/react'
+import { keyframes } from "@emotion/react"
 
 const mainColor = "rgb(230, 230, 230)"
 const highlight = "rgb(246, 246, 246)"

@@ -3,19 +3,17 @@ import PropTypes from "prop-types"
 import { useStaticQuery, graphql } from "gatsby"
 
 const Head = ({ pageContext }) => {
-  const { site } = useStaticQuery(
-    graphql`
-      query {
-        site {
-          siteMetadata {
-            title
-            description
-            author
-          }
+  const { site } = useStaticQuery(graphql`
+    query {
+      site {
+        siteMetadata {
+          title
+          description
+          author
         }
       }
-    `
-  )
+    }
+  `)
 
   const pageTitle =
     (pageContext.node && pageContext.node.frontmatter.title) || "Home"

@@ -83,7 +83,7 @@ module.exports = {
                   url,
                   guid: url,
                 })
-              });
+              })
             },
             query: `{
   allFile(
