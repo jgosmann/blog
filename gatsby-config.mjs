@@ -1,6 +1,10 @@
-const rehypeSlug = require("rehype-slug")
+import { dirname } from "path"
+import rehypeSlug from "rehype-slug"
+import { fileURLToPath } from "url"
 
-module.exports = {
+const __dirname = dirname(fileURLToPath(import.meta.url))
+
+export default {
   siteMetadata: {
     title: `Jan's blog`,
     description: `This page mostly serves as an archive of some of my older blog posts by me. I am rarely adding new posts these days.`,

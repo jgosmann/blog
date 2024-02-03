@@ -5,10 +5,10 @@
  */
 
 // You can delete this file if you're not using it
-const path = require("path")
-const readingTime = require("reading-time")
+import path from "path"
+import readingTime from "reading-time"
 
-exports.createPages = async ({ actions, graphql, reporter }) => {
+const createPages = async ({ actions, graphql, reporter }) => {
   const { createPage } = actions
 
   const defaultTemplate = path.resolve("src/templates/post.js")
@@ -68,7 +68,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
   })
 }
 
-exports.onCreateNode = ({ node, actions }) => {
+const onCreateNode = ({ node, actions }) => {
   const { createNodeField } = actions
   if (node.internal.type == `Mdx`) {
     createNodeField({
@@ -77,4 +77,9 @@ exports.onCreateNode = ({ node, actions }) => {
       value: readingTime(node.body),
     })
   }
+}
+
+export default {
+  createPages,
+  onCreateNode,
 }
