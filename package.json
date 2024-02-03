@@ -33,7 +33,7 @@
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
     "reading-time": "^1.5.0",
-    "rehype-slug": "^4.0.1"
+    "rehype-slug": "^6.0.0"
   },
   "devDependencies": {
     "@emotion/eslint-plugin": "^11.2.0",

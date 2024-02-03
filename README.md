@@ -20,4 +20,4 @@ gatsby build
 
 ## Held-back dependencies
 
-* `rehype-slug < 5` because Gatsby does not support ESM modules yet.
+none
