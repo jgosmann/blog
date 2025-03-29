@@ -1,5 +1,4 @@
 import React, { useEffect } from "react"
-import PropTypes from "prop-types"
 import { graphql, Link, useStaticQuery } from "gatsby"
 
 import FlexList from "./flexList"
