@@ -20,4 +20,4 @@ gatsby build
 
 ## Held-back dependencies
 
-none
+- React <19 because Gatsby is not compatible yet
