@@ -21,3 +21,4 @@ gatsby build
 ## Held-back dependencies
 
 - React <19 because Gatsby is not compatible yet
+- eslint <9 because Gatsby is not compatible yet
